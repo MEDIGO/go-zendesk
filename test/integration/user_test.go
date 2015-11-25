@@ -16,8 +16,10 @@ func TestUserCRUD(t *testing.T) {
 	client, err := zendesk.NewEnvClient()
 	assert.NoError(t, err)
 
-	name := "test-" + randstr(7)
-	input := zendesk.User{Name: zendesk.String(name), Email: zendesk.String(name + "@example.com")}
+	input := zendesk.User{
+		Name:  zendesk.String("test-" + randstr(7)),
+		Email: zendesk.String("test-" + randstr(7) + "@example.com"),
+	}
 
 	created, err := client.Users.Create(&input)
 	assert.NoError(t, err)

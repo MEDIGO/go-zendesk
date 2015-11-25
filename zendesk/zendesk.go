@@ -121,8 +121,9 @@ func (c *Client) Post(endpoint string, in, out interface{}) error {
 type ErrorResponse struct {
 	Response *http.Response
 
-	Type        *string `json:"error,omitmepty"`
-	Description *string `json:"description,omitempty"`
+	Type        *string                    `json:"error,omitmepty"`
+	Description *string                    `json:"description,omitempty"`
+	Details     *map[string][]*ErrorDetail `json: "details,omitempty"`
 }
 
 func (e *ErrorResponse) Error() string {
@@ -133,10 +134,23 @@ func (e *ErrorResponse) Error() string {
 	}
 
 	if e.Description != nil {
-		msg = fmt.Sprintf("%s %v", msg, *e.Description)
+		msg = fmt.Sprintf("%s: %v", msg, *e.Description)
+	}
+
+	if e.Details != nil {
+		msg = fmt.Sprintf("%s: %+v", msg, *e.Details)
 	}
 
 	return msg
+}
+
+type ErrorDetail struct {
+	Type        *string `json:"error,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+func (e *ErrorDetail) Error() string {
+	return fmt.Sprintf("%s: %s", *e.Type, *e.Description)
 }
 
 func Bool(b bool) *bool {

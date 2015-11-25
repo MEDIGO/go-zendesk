@@ -30,6 +30,10 @@ type Ticket struct {
 	UpdatedAt       *time.Time `json:"updated_at,omitempty"`
 }
 
+type TicketBody struct {
+	Ticket *Ticket `json:"ticket"`
+}
+
 type TicketService struct {
 	client *Client
 }
@@ -39,11 +43,14 @@ func NewTicketService(client *Client) *TicketService {
 }
 
 func (s *TicketService) Get(id int) (*Ticket, error) {
-	endpoint := fmt.Sprintf("/api/v2/tickets/%d.json", id)
-	res := struct {
-		Ticket Ticket `json:"ticket"`
-	}{}
+	res := TicketBody{}
+	err := s.client.Get(fmt.Sprintf("/api/v2/tickets/%d.json", id), &res)
+	return res.Ticket, err
+}
 
-	err := s.client.Get(endpoint, &res)
-	return &res.Ticket, err
+func (s *TicketService) Create(ticket *Ticket) (*Ticket, error) {
+	req := TicketBody{ticket}
+	res := TicketBody{}
+	err := s.client.Post("/api/v2/tickets.json", &req, &res)
+	return res.Ticket, err
 }
