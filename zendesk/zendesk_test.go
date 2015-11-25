@@ -7,9 +7,9 @@ import (
 )
 
 type TestSuite struct {
-	Cl  *Client
-	Srv *httptest.Server
-	Mux *http.ServeMux
+	Client *Client
+	Server *httptest.Server
+	Mux    *http.ServeMux
 }
 
 func NewTestSuite() *TestSuite {
@@ -22,12 +22,12 @@ func NewTestSuite() *TestSuite {
 	client.BaseURL = url
 
 	return &TestSuite{
-		Cl:  client,
-		Srv: server,
-		Mux: mux,
+		Client: client,
+		Server: server,
+		Mux:    mux,
 	}
 }
 
 func (s *TestSuite) Teardown() {
-	s.Srv.Close()
+	s.Server.Close()
 }

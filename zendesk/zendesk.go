@@ -21,6 +21,7 @@ type Client struct {
 	UserAgent string
 
 	Tickets *TicketService
+	Users   *UserService
 }
 
 func NewEnvClient() (*Client, error) {
@@ -53,6 +54,7 @@ func NewClient(domain, username, password string) (*Client, error) {
 	}
 
 	client.Tickets = NewTicketService(client)
+	client.Users = NewUserService(client)
 
 	return client, err
 }
@@ -112,6 +114,10 @@ func (c *Client) Get(endpoint string, out interface{}) error {
 	return c.do("GET", endpoint, nil, out)
 }
 
+func (c *Client) Post(endpoint string, in, out interface{}) error {
+	return c.do("POST", endpoint, in, out)
+}
+
 type ErrorResponse struct {
 	Response *http.Response
 
@@ -131,4 +137,19 @@ func (e *ErrorResponse) Error() string {
 	}
 
 	return msg
+}
+
+func Bool(b bool) *bool {
+	p := b
+	return &p
+}
+
+func Int(i int) *int {
+	p := i
+	return &p
+}
+
+func String(s string) *string {
+	p := s
+	return &p
 }
