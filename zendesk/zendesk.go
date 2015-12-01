@@ -103,11 +103,11 @@ func (c *Client) do(method, endpoint string, in interface{}, out interface{}) er
 		}
 	}
 
-	errRes := new(ErrorResponse)
-	errRes.Response = res
-	json.NewDecoder(res.Body).Decode(errRes)
+	apierr := new(APIError)
+	apierr.Response = res
+	json.NewDecoder(res.Body).Decode(apierr)
 
-	return errRes
+	return apierr
 }
 
 func (c *Client) Get(endpoint string, out interface{}) error {
@@ -118,15 +118,22 @@ func (c *Client) Post(endpoint string, in, out interface{}) error {
 	return c.do("POST", endpoint, in, out)
 }
 
-type ErrorResponse struct {
-	Response *http.Response
-
-	Type        *string                    `json:"error,omitmepty"`
-	Description *string                    `json:"description,omitempty"`
-	Details     *map[string][]*ErrorDetail `json: "details,omitempty"`
+type APIPayload struct {
+	User    *User     `json:"user,omitempty"`
+	Users   []*User   `json:"users,omitempty"`
+	Ticket  *Ticket   `json:"ticket,omitempty"`
+	Tickets []*Ticket `json:"tickets,omitempty"`
 }
 
-func (e *ErrorResponse) Error() string {
+type APIError struct {
+	Response *http.Response
+
+	Type        *string                       `json:"error,omitmepty"`
+	Description *string                       `json:"description,omitempty"`
+	Details     *map[string][]*APIErrorDetail `json: "details,omitempty"`
+}
+
+func (e *APIError) Error() string {
 	msg := fmt.Sprintf("%v %v: %d", e.Response.Request.Method, e.Response.Request.URL, e.Response.StatusCode)
 
 	if e.Type != nil {
@@ -144,12 +151,12 @@ func (e *ErrorResponse) Error() string {
 	return msg
 }
 
-type ErrorDetail struct {
+type APIErrorDetail struct {
 	Type        *string `json:"error,omitempty"`
 	Description *string `json:"description,omitempty"`
 }
 
-func (e *ErrorDetail) Error() string {
+func (e *APIErrorDetail) Error() string {
 	return fmt.Sprintf("%s: %s", *e.Type, *e.Description)
 }
 

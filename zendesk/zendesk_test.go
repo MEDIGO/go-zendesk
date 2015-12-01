@@ -4,30 +4,27 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type TestSuite struct {
-	Client *Client
-	Server *httptest.Server
-	Mux    *http.ServeMux
+	suite.Suite
+
+	client *Client
+	server *httptest.Server
+	mux    *http.ServeMux
 }
 
-func NewTestSuite() *TestSuite {
-	mux := http.NewServeMux()
-	server := httptest.NewServer(mux)
+func (s *TestSuite) SetupTest() {
+	s.mux = http.NewServeMux()
+	s.server = httptest.NewServer(s.mux)
 
-	client, _ := NewClient("company", "username", "password")
-	url, _ := url.Parse(server.URL)
-
-	client.BaseURL = url
-
-	return &TestSuite{
-		Client: client,
-		Server: server,
-		Mux:    mux,
-	}
+	s.client, _ = NewClient("company", "username", "password")
+	url, _ := url.Parse(s.server.URL)
+	s.client.BaseURL = url
 }
 
-func (s *TestSuite) Teardown() {
-	s.Server.Close()
+func (s *TestSuite) TearDownTest() {
+	s.server.Close()
 }

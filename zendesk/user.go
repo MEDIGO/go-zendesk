@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	Id                  *int64     `json:"id,omitempty"`
-	Url                 *string    `json:"url,omitempty"`
+	URL                 *string    `json:"url,omitempty"`
 	Name                *string    `json:"name,omitempty"`
 	ExternalId          *string    `json:"external_id,omitempty"`
 	Alias               *string    `json:"alias,omitempty"`
@@ -19,7 +19,7 @@ type User struct {
 	SharedAgent         *bool      `json:"shared_agent,omitempty"`
 	Locale              *string    `json:"locale,omitempty"`
 	LocaleId            *int64     `json:"locale_id,omitempty"`
-	Time_zone           *string    `json:"time_zone,omitempty"`
+	TimeZone            *string    `json:"time_zone,omitempty"`
 	LastLoginAt         *time.Time `json:"last_login_at,omitempty"`
 	Email               *string    `json:"email,omitempty"`
 	Phone               *string    `json:"phone,omitempty"`
@@ -50,16 +50,20 @@ func NewUserService(client *Client) *UserService {
 }
 
 func (s *UserService) Get(id int64) (*User, error) {
-	res := UserBody{}
-
-	err := s.client.Get(fmt.Sprintf("/api/v2/users/%d.json", id), &res)
-	return res.User, err
+	out := new(APIPayload)
+	err := s.client.Get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
+	return out.User, err
 }
 
 func (s *UserService) Create(user *User) (*User, error) {
-	req := UserBody{user}
-	res := UserBody{}
+	in := &APIPayload{User: user}
+	out := new(APIPayload)
+	err := s.client.Post("/api/v2/users.json", in, out)
+	return out.User, err
+}
 
-	err := s.client.Post("/api/v2/users.json", &req, &res)
-	return res.User, err
+func (s *UserService) Search(query string) ([]*User, error) {
+	out := new(APIPayload)
+	err := s.client.Get("/api/v2/users/search.json?query="+query, out)
+	return out.Users, err
 }

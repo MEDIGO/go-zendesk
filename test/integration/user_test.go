@@ -32,4 +32,9 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, *created.Id, *found.Id)
 	assert.Equal(t, *created.Name, *found.Name)
 	assert.Equal(t, *created.Email, *found.Email)
+
+	searched, err := client.Users.Search(*input.Email)
+	assert.NoError(t, err)
+	assert.Len(t, searched, 1)
+	assert.Equal(t, found, searched[0])
 }

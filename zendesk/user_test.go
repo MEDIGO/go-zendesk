@@ -7,45 +7,63 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
-func TestUserSeviceGet(t *testing.T) {
-	s := NewTestSuite()
-	defer s.Teardown()
+type UserServiceSuite struct {
+	TestSuite
+}
 
-	s.Mux.HandleFunc("/api/v2/users/35436.json", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+func (s *UserServiceSuite) TestGet() {
+	s.mux.HandleFunc("/api/v2/users/35436.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "GET", r.Method)
 
 		fmt.Fprint(w, `{"user": {"id": 35436, "name": "Johnny Agent"}}`)
 	})
 
-	found, err := s.Client.Users.Get(35436)
+	found, err := s.client.Users.Get(35436)
 	expected := &User{Id: Int(35436), Name: String("Johnny Agent")}
 
-	assert.NoError(t, err)
-	assert.Equal(t, found, expected)
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), found, expected)
 }
 
-func TestUserServiceCreate(t *testing.T) {
-	s := NewTestSuite()
-	defer s.Teardown()
-
+func (s *UserServiceSuite) TestCreate() {
 	input := &User{Name: String("Roger Wilco"), Email: String("roge@example.org")}
 
-	s.Mux.HandleFunc("/api/v2/users.json", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+	s.mux.HandleFunc("/api/v2/users.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "POST", r.Method)
 
-		received := &UserBody{&User{}}
+		received := new(APIPayload)
 		json.NewDecoder(r.Body).Decode(received)
 
-		assert.Equal(t, input, received.User)
+		assert.Equal(s.T(), input, received.User)
 
 		fmt.Fprint(w, `{"user": {"id": 9873843, "name": "Roger Wilco", "email": "roge@example.org"}}`)
 	})
 
-	found, err := s.Client.Users.Create(input)
+	found, err := s.client.Users.Create(input)
 	expected := &User{Id: Int(9873843), Name: String("Roger Wilco"), Email: String("roge@example.org")}
 
-	assert.NoError(t, err)
-	assert.Equal(t, expected, found)
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), expected, found)
+}
+
+func (s *UserServiceSuite) TestSearch() {
+	s.mux.HandleFunc("/api/v2/users/search.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "GET", r.Method)
+		assert.Equal(s.T(), "Gerry", r.URL.Query().Get("query"))
+
+		fmt.Fprint(w, `{"users": [{"id": 35436}, {"id": 9873843}]}`)
+	})
+
+	found, err := s.client.Users.Search("Gerry")
+	expected := []*User{&User{Id: Int(35436)}, &User{Id: Int(9873843)}}
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), found, expected)
+}
+
+func TestUserServiceSuite(t *testing.T) {
+	suite.Run(t, new(UserServiceSuite))
 }
