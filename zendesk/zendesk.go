@@ -158,7 +158,7 @@ func Bool(b bool) *bool {
 	return &p
 }
 
-func Int(i int) *int {
+func Int(i int64) *int64 {
 	p := i
 	return &p
 }
