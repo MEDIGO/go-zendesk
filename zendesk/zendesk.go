@@ -12,19 +12,24 @@ import (
 	"strconv"
 )
 
-type Client struct {
+type Client interface {
+	TicketGet(id int64) (*Ticket, error)
+	TicketCreate(ticket *Ticket) (*Ticket, error)
+	UserGet(id int64) (*User, error)
+	UserCreate(user *User) (*User, error)
+	UserSearch(query string) ([]*User, error)
+}
+
+type client struct {
 	username string
 	password string
 
-	Client    *http.Client
-	BaseURL   *url.URL
-	UserAgent string
-
-	Tickets *TicketService
-	Users   *UserService
+	client    *http.Client
+	baseURL   *url.URL
+	userAgent string
 }
 
-func NewEnvClient() (*Client, error) {
+func NewEnvClient() (Client, error) {
 	domain := os.Getenv("ZENDESK_DOMAIN")
 	if domain == "" {
 		return nil, errors.New("ZENDESK_DOMAIN not found")
@@ -43,36 +48,34 @@ func NewEnvClient() (*Client, error) {
 	return NewClient(domain, username, password)
 }
 
-func NewClient(domain, username, password string) (*Client, error) {
+func NewClient(domain, username, password string) (Client, error) {
 	baseURL, err := url.Parse(fmt.Sprintf("https://%s.zendesk.com", domain))
-
-	client := &Client{
-		BaseURL:   baseURL,
-		UserAgent: "Go-Zendesk",
-		username:  username,
-		password:  password,
+	if err != nil {
+		return nil, err
 	}
 
-	client.Tickets = NewTicketService(client)
-	client.Users = NewUserService(client)
-
-	return client, err
+	return &client{
+		baseURL:   baseURL,
+		userAgent: "Go-Zendesk",
+		username:  username,
+		password:  password,
+	}, err
 }
 
-func (c *Client) do(method, endpoint string, in interface{}, out interface{}) error {
+func (c *client) do(method, endpoint string, in interface{}, out interface{}) error {
 	rel, err := url.Parse(endpoint)
 	if err != nil {
 		return err
 	}
 
-	url := c.BaseURL.ResolveReference(rel)
+	url := c.baseURL.ResolveReference(rel)
 	req, err := http.NewRequest(method, url.String(), nil)
 	if err != nil {
 		return err
 	}
 
 	req.SetBasicAuth(c.username, c.password)
-	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Set("User-Agent", c.userAgent)
 
 	if in != nil {
 		payload, err := json.Marshal(in)
@@ -110,11 +113,11 @@ func (c *Client) do(method, endpoint string, in interface{}, out interface{}) er
 	return apierr
 }
 
-func (c *Client) Get(endpoint string, out interface{}) error {
+func (c *client) get(endpoint string, out interface{}) error {
 	return c.do("GET", endpoint, nil, out)
 }
 
-func (c *Client) Post(endpoint string, in, out interface{}) error {
+func (c *client) post(endpoint string, in, out interface{}) error {
 	return c.do("POST", endpoint, in, out)
 }
 

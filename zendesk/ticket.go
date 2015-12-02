@@ -30,23 +30,15 @@ type Ticket struct {
 	UpdatedAt       *time.Time `json:"updated_at,omitempty"`
 }
 
-type TicketService struct {
-	client *Client
-}
-
-func NewTicketService(client *Client) *TicketService {
-	return &TicketService{client}
-}
-
-func (s *TicketService) Get(id int64) (*Ticket, error) {
+func (c *client) TicketGet(id int64) (*Ticket, error) {
 	out := new(APIPayload)
-	err := s.client.Get(fmt.Sprintf("/api/v2/tickets/%d.json", id), out)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d.json", id), out)
 	return out.Ticket, err
 }
 
-func (s *TicketService) Create(ticket *Ticket) (*Ticket, error) {
+func (c *client) TicketCreate(ticket *Ticket) (*Ticket, error) {
 	in := &APIPayload{Ticket: ticket}
 	out := new(APIPayload)
-	err := s.client.Post("/api/v2/tickets.json", in, out)
+	err := c.post("/api/v2/tickets.json", in, out)
 	return out.Ticket, err
 }

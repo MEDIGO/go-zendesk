@@ -37,33 +37,21 @@ type User struct {
 	Suspended           *bool      `json:"suspended,omitempty"`
 }
 
-type UserBody struct {
-	User *User `json:"user"`
-}
-
-type UserService struct {
-	client *Client
-}
-
-func NewUserService(client *Client) *UserService {
-	return &UserService{client}
-}
-
-func (s *UserService) Get(id int64) (*User, error) {
+func (c *client) UserGet(id int64) (*User, error) {
 	out := new(APIPayload)
-	err := s.client.Get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
+	err := c.get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
 	return out.User, err
 }
 
-func (s *UserService) Create(user *User) (*User, error) {
+func (c *client) UserCreate(user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
-	err := s.client.Post("/api/v2/users.json", in, out)
+	err := c.post("/api/v2/users.json", in, out)
 	return out.User, err
 }
 
-func (s *UserService) Search(query string) ([]*User, error) {
+func (c *client) UserSearch(query string) ([]*User, error) {
 	out := new(APIPayload)
-	err := s.client.Get("/api/v2/users/search.json?query="+query, out)
+	err := c.get("/api/v2/users/search.json?query="+query, out)
 	return out.Users, err
 }

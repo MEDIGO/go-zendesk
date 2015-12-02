@@ -5,13 +5,14 @@ import (
 	"net/http/httptest"
 	"net/url"
 
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
 type TestSuite struct {
 	suite.Suite
 
-	client *Client
+	client Client
 	server *httptest.Server
 	mux    *http.ServeMux
 }
@@ -19,10 +20,15 @@ type TestSuite struct {
 func (s *TestSuite) SetupTest() {
 	s.mux = http.NewServeMux()
 	s.server = httptest.NewServer(s.mux)
+	url, err := url.Parse(s.server.URL)
+	require.NoError(s.T(), err)
 
-	s.client, _ = NewClient("company", "username", "password")
-	url, _ := url.Parse(s.server.URL)
-	s.client.BaseURL = url
+	s.client = &client{
+		baseURL:   url,
+		userAgent: "test",
+		username:  "test",
+		password:  "test",
+	}
 }
 
 func (s *TestSuite) TearDownTest() {
