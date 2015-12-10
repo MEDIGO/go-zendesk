@@ -19,6 +19,9 @@ func TestUserCRUD(t *testing.T) {
 	input := zendesk.User{
 		Name:  zendesk.String("test-" + randstr(7)),
 		Email: zendesk.String("test-" + randstr(7) + "@example.com"),
+		UserFields: map[string]interface{}{
+			"test": "this is a test",
+		},
 	}
 
 	created, err := client.UserCreate(&input)
@@ -30,8 +33,9 @@ func TestUserCRUD(t *testing.T) {
 	found, err := client.UserGet(*created.Id)
 	assert.NoError(t, err)
 	assert.Equal(t, *created.Id, *found.Id)
-	assert.Equal(t, *created.Name, *found.Name)
-	assert.Equal(t, *created.Email, *found.Email)
+	assert.Equal(t, *input.Name, *found.Name)
+	assert.Equal(t, *input.Email, *found.Email)
+	assert.Equal(t, input.UserFields["test"].(string), found.UserFields["test"].(string))
 
 	searched, err := client.UserSearch(*input.Email)
 	assert.NoError(t, err)
