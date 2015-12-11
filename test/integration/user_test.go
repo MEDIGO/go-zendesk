@@ -37,8 +37,16 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, *input.Email, *found.Email)
 	assert.Equal(t, input.UserFields["test"].(string), found.UserFields["test"].(string))
 
-	searched, err := client.UserSearch(*input.Email)
+	input = zendesk.User{
+		Name: zendesk.String("test-" + randstr(7)),
+	}
+
+	updated, err := client.UserUpdate(*created.Id, &input)
+	assert.NoError(t, err)
+	assert.Equal(t, input.Name, updated.Name)
+
+	searched, err := client.UserSearch(*updated.Email)
 	assert.NoError(t, err)
 	assert.Len(t, searched, 1)
-	assert.Equal(t, found, searched[0])
+	assert.Equal(t, updated, searched[0])
 }

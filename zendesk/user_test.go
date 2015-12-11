@@ -49,6 +49,27 @@ func (s *UserServiceSuite) TestCreate() {
 	assert.Equal(s.T(), expected, found)
 }
 
+func (s *UserServiceSuite) TestUpdate() {
+	input := &User{Name: String("Roger Wilco II")}
+
+	s.mux.HandleFunc("/api/v2/users.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "POST", r.Method)
+
+		received := new(APIPayload)
+		json.NewDecoder(r.Body).Decode(received)
+
+		assert.Equal(s.T(), input, received.User)
+
+		fmt.Fprint(w, `{"user": {"id": 9873843, "name": "Roger Wilco II"}}`)
+	})
+
+	found, err := s.client.UserCreate(input)
+	expected := &User{Id: Int(9873843), Name: String("Roger Wilco II")}
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), expected, found)
+}
+
 func (s *UserServiceSuite) TestSearch() {
 	s.mux.HandleFunc("/api/v2/users/search.json", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(s.T(), "GET", r.Method)

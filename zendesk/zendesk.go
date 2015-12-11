@@ -13,11 +13,12 @@ import (
 )
 
 type Client interface {
-	TicketGet(id int64) (*Ticket, error)
-	TicketCreate(ticket *Ticket) (*Ticket, error)
-	UserGet(id int64) (*User, error)
-	UserCreate(user *User) (*User, error)
-	UserSearch(query string) ([]*User, error)
+	TicketGet(int64) (*Ticket, error)
+	TicketCreate(*Ticket) (*Ticket, error)
+	UserGet(int64) (*User, error)
+	UserCreate(*User) (*User, error)
+	UserSearch(string) ([]*User, error)
+	UserUpdate(int64, *User) (*User, error)
 }
 
 type client struct {
@@ -119,6 +120,10 @@ func (c *client) get(endpoint string, out interface{}) error {
 
 func (c *client) post(endpoint string, in, out interface{}) error {
 	return c.do("POST", endpoint, in, out)
+}
+
+func (c *client) put(endpoint string, in, out interface{}) error {
+	return c.do("PUT", endpoint, in, out)
 }
 
 type APIPayload struct {

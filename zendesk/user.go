@@ -51,6 +51,13 @@ func (c *client) UserCreate(user *User) (*User, error) {
 	return out.User, err
 }
 
+func (c *client) UserUpdate(id int64, user *User) (*User, error) {
+	in := &APIPayload{User: user}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/users/%d.json", id), in, out)
+	return out.User, err
+}
+
 func (c *client) UserSearch(query string) ([]*User, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/users/search.json?query="+query, out)
