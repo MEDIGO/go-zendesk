@@ -13,13 +13,14 @@ import (
 )
 
 type Client interface {
+	LocaleList() ([]Locale, error)
 	OrganizationCreate(*Organization) (*Organization, error)
 	OrganizationGet(int64) (*Organization, error)
 	TicketCreate(*Ticket) (*Ticket, error)
 	TicketGet(int64) (*Ticket, error)
 	UserCreate(*User) (*User, error)
 	UserGet(int64) (*User, error)
-	UserSearch(string) ([]*User, error)
+	UserSearch(string) ([]User, error)
 	UserUpdate(int64, *User) (*User, error)
 }
 
@@ -129,12 +130,14 @@ func (c *client) put(endpoint string, in, out interface{}) error {
 }
 
 type APIPayload struct {
-	User          *User           `json:"user,omitempty"`
-	Users         []*User         `json:"users,omitempty"`
-	Ticket        *Ticket         `json:"ticket,omitempty"`
-	Tickets       []*Ticket       `json:"tickets,omitempty"`
-	Organization  *Organization   `json:"organization,omitempty"`
-	Organizations []*Organization `json:"organizations,omitempty"`
+	User          *User          `json:"user,omitempty"`
+	Users         []User         `json:"users,omitempty"`
+	Ticket        *Ticket        `json:"ticket,omitempty"`
+	Tickets       []Ticket       `json:"tickets,omitempty"`
+	Organization  *Organization  `json:"organization,omitempty"`
+	Organizations []Organization `json:"organizations,omitempty"`
+	Locale        *Locale        `json:"locale,omitempty"`
+	Locales       []Locale       `json:"locales,omitempty"`
 }
 
 type APIError struct {

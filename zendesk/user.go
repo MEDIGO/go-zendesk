@@ -58,7 +58,7 @@ func (c *client) UserUpdate(id int64, user *User) (*User, error) {
 	return out.User, err
 }
 
-func (c *client) UserSearch(query string) ([]*User, error) {
+func (c *client) UserSearch(query string) ([]User, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/users/search.json?query="+query, out)
 	return out.Users, err

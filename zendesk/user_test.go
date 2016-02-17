@@ -79,7 +79,7 @@ func (s *UserServiceSuite) TestSearch() {
 	})
 
 	found, err := s.client.UserSearch("Gerry")
-	expected := []*User{&User{ID: Int(35436)}, &User{ID: Int(9873843)}}
+	expected := []User{User{ID: Int(35436)}, User{ID: Int(9873843)}}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)

@@ -48,5 +48,5 @@ func TestUserCRUD(t *testing.T) {
 	searched, err := client.UserSearch(*updated.Email)
 	assert.NoError(t, err)
 	assert.Len(t, searched, 1)
-	assert.Equal(t, updated, searched[0])
+	assert.Equal(t, updated, &searched[0])
 }
