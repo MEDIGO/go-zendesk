@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
-	Id                  *int64                 `json:"id,omitempty"`
+	ID                  *int64                 `json:"id,omitempty"`
 	URL                 *string                `json:"url,omitempty"`
 	Name                *string                `json:"name,omitempty"`
-	ExternalId          *string                `json:"external_id,omitempty"`
+	ExternalID          *string                `json:"external_id,omitempty"`
 	Alias               *string                `json:"alias,omitempty"`
 	CreatedAt           *time.Time             `json:"created_at,omitempty"`
 	UpdatedAt           *time.Time             `json:"updated_at,omitempty"`
@@ -18,7 +18,7 @@ type User struct {
 	Shared              *bool                  `json:"shared,omitempty"`
 	SharedAgent         *bool                  `json:"shared_agent,omitempty"`
 	Locale              *string                `json:"locale,omitempty"`
-	LocaleId            *int64                 `json:"locale_id,omitempty"`
+	LocaleID            *int64                 `json:"locale_id,omitempty"`
 	TimeZone            *string                `json:"time_zone,omitempty"`
 	LastLoginAt         *time.Time             `json:"last_login_at,omitempty"`
 	Email               *string                `json:"email,omitempty"`
@@ -26,9 +26,9 @@ type User struct {
 	Signature           *string                `json:"signature,omitempty"`
 	Details             *string                `json:"details,omitempty"`
 	Notes               *string                `json:"notes,omitempty"`
-	OrganizationId      *int64                 `json:"organization_id,omitempty"`
+	OrganizationID      *int64                 `json:"organization_id,omitempty"`
 	Role                *string                `json:"role,omitempty"`
-	CustomerRoleId      *int64                 `json:"custom_role_id,omitempty"`
+	CustomerRoleID      *int64                 `json:"custom_role_id,omitempty"`
 	Moderator           *bool                  `json:"moderator,omitempty"`
 	TicketRestriction   *string                `json:"ticket_restriction,omitempty"`
 	OnlyPrivateComments *bool                  `json:"only_private_comments,omitempty"`
@@ -58,7 +58,7 @@ func (c *client) UserUpdate(id int64, user *User) (*User, error) {
 	return out.User, err
 }
 
-func (c *client) UserSearch(query string) ([]*User, error) {
+func (c *client) UserSearch(query string) ([]User, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/users/search.json?query="+query, out)
 	return out.Users, err

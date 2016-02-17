@@ -25,13 +25,13 @@ func TestOrganizationCRUD(t *testing.T) {
 
 	created, err := client.OrganizationCreate(&input)
 	assert.NoError(t, err)
-	assert.NotNil(t, created.Id)
+	assert.NotNil(t, created.ID)
 	assert.Equal(t, *input.Name, *created.Name)
 	assert.Equal(t, input.OrganizationFields["test"].(string), "this is a test")
 
-	found, err := client.OrganizationGet(*created.Id)
+	found, err := client.OrganizationGet(*created.ID)
 	assert.NoError(t, err)
-	assert.Equal(t, *created.Id, *found.Id)
+	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
 	assert.Equal(t, input.OrganizationFields["test"].(string), found.OrganizationFields["test"].(string))
 }

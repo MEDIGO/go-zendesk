@@ -26,18 +26,18 @@ func TestTicketCRUD(t *testing.T) {
 	ticket := &zendesk.Ticket{
 		Subject:     zendesk.String("test-" + randstr(7)),
 		Description: zendesk.String("test-" + randstr(7)),
-		RequesterId: user.Id,
+		RequesterID: user.ID,
 		Tags:        &[]string{"test"},
 	}
 
 	created, err := client.TicketCreate(ticket)
 	assert.NoError(t, err)
-	assert.NotNil(t, created.Id)
+	assert.NotNil(t, created.ID)
 	assert.Len(t, *ticket.Tags, 1)
 
-	found, err := client.TicketGet(*created.Id)
+	found, err := client.TicketGet(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, created.Subject, found.Subject)
-	assert.Equal(t, created.RequesterId, found.RequesterId)
+	assert.Equal(t, created.RequesterID, found.RequesterID)
 	assert.Equal(t, created.Tags, found.Tags)
 }
