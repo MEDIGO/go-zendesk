@@ -26,13 +26,13 @@ func TestUserCRUD(t *testing.T) {
 
 	created, err := client.UserCreate(&input)
 	assert.NoError(t, err)
-	assert.NotNil(t, created.Id)
+	assert.NotNil(t, created.ID)
 	assert.Equal(t, *input.Name, *created.Name)
 	assert.Equal(t, *input.Email, *created.Email)
 
-	found, err := client.UserGet(*created.Id)
+	found, err := client.UserGet(*created.ID)
 	assert.NoError(t, err)
-	assert.Equal(t, *created.Id, *found.Id)
+	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
 	assert.Equal(t, *input.Email, *found.Email)
 	assert.Equal(t, input.UserFields["test"].(string), found.UserFields["test"].(string))
@@ -41,7 +41,7 @@ func TestUserCRUD(t *testing.T) {
 		Name: zendesk.String("test-" + randstr(7)),
 	}
 
-	updated, err := client.UserUpdate(*created.Id, &input)
+	updated, err := client.UserUpdate(*created.ID, &input)
 	assert.NoError(t, err)
 	assert.Equal(t, input.Name, updated.Name)
 

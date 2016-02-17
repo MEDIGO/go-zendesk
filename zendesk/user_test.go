@@ -22,7 +22,7 @@ func (s *UserServiceSuite) TestGet() {
 	})
 
 	found, err := s.client.UserGet(35436)
-	expected := &User{Id: Int(35436), Name: String("Johnny Agent")}
+	expected := &User{ID: Int(35436), Name: String("Johnny Agent")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)
@@ -43,7 +43,7 @@ func (s *UserServiceSuite) TestCreate() {
 	})
 
 	found, err := s.client.UserCreate(input)
-	expected := &User{Id: Int(9873843), Name: String("Roger Wilco"), Email: String("roge@example.org")}
+	expected := &User{ID: Int(9873843), Name: String("Roger Wilco"), Email: String("roge@example.org")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), expected, found)
@@ -64,7 +64,7 @@ func (s *UserServiceSuite) TestUpdate() {
 	})
 
 	found, err := s.client.UserCreate(input)
-	expected := &User{Id: Int(9873843), Name: String("Roger Wilco II")}
+	expected := &User{ID: Int(9873843), Name: String("Roger Wilco II")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), expected, found)
@@ -79,7 +79,7 @@ func (s *UserServiceSuite) TestSearch() {
 	})
 
 	found, err := s.client.UserSearch("Gerry")
-	expected := []*User{&User{Id: Int(35436)}, &User{Id: Int(9873843)}}
+	expected := []*User{&User{ID: Int(35436)}, &User{ID: Int(9873843)}}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)

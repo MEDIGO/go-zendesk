@@ -21,7 +21,7 @@ func (s *OrganizationServiceSuite) TestGet() {
 	})
 
 	found, err := s.client.OrganizationGet(35436)
-	expected := &Organization{Id: Int(35436), Name: String("One Organization")}
+	expected := &Organization{ID: Int(35436), Name: String("One Organization")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)
@@ -42,7 +42,7 @@ func (s *OrganizationServiceSuite) TestCreate() {
 	})
 
 	found, err := s.client.OrganizationCreate(input)
-	expected := &Organization{Id: Int(35436), Name: String("One Organization")}
+	expected := &Organization{ID: Int(35436), Name: String("One Organization")}
 
 	assert.NoError(s.T(), err, expected)
 	assert.Equal(s.T(), found, expected)

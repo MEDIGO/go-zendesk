@@ -6,16 +6,16 @@ import (
 )
 
 type Organization struct {
-	Id                 *int64                 `json:"id,omitempty"`
-	Url                *string                `json:"url,omitempty"`
-	ExternalId         *string                `json:"external_id,omitempty"`
+	ID                 *int64                 `json:"id,omitempty"`
+	URL                *string                `json:"url,omitempty"`
+	ExternalID         *string                `json:"external_id,omitempty"`
 	Name               *string                `json:"name,omitempty"`
 	CreatedAt          *time.Time             `json:"created_at,omitempty"`
 	UpdatedAt          *time.Time             `json:"updated_at,omitempty"`
 	DomainNames        *[]string              `json:"domain_names,omitempty"`
 	Details            *string                `json:"details,omitempty"`
 	Notes              *string                `json:"notes,omitempty"`
-	GroupId            *int64                 `json:"group_id,omitempty"`
+	GroupID            *int64                 `json:"group_id,omitempty"`
 	SharedTickets      *bool                  `json:"shared_tickets,omitempty"`
 	SharedComments     *bool                  `json:"shared_comments,omitempty"`
 	OrganizationFields map[string]interface{} `json:"organization_fields,omitempty"`

@@ -21,7 +21,7 @@ func (s *TicketServiceSuite) TestGet() {
 	})
 
 	found, err := s.client.TicketGet(35436)
-	expected := &Ticket{Id: Int(35436), Subject: String("My printer is on fire!")}
+	expected := &Ticket{ID: Int(35436), Subject: String("My printer is on fire!")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)
@@ -42,7 +42,7 @@ func (s *TicketServiceSuite) TestCreate() {
 	})
 
 	found, err := s.client.TicketCreate(input)
-	expected := &Ticket{Id: Int(35436), Subject: String("My printer is on fire!")}
+	expected := &Ticket{ID: Int(35436), Subject: String("My printer is on fire!")}
 
 	assert.NoError(s.T(), err, expected)
 	assert.Equal(s.T(), found, expected)
