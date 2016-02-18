@@ -13,6 +13,8 @@ import (
 )
 
 type Client interface {
+	LocaleGet(int64) (*Locale, error)
+	LocaleGetByCode(string) (*Locale, error)
 	LocaleList() ([]Locale, error)
 	OrganizationCreate(*Organization) (*Organization, error)
 	OrganizationGet(int64) (*Organization, error)

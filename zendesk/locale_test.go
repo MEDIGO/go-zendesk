@@ -24,3 +24,31 @@ func (s *LocaleServiceSuite) TestList() {
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)
 }
+
+func (s *LocaleServiceSuite) TestGet() {
+	s.mux.HandleFunc("/api/v2/locales/1.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "GET", r.Method)
+
+		fmt.Fprint(w, `{"locale": {"id": 1}}`)
+	})
+
+	found, err := s.client.LocaleGet(1)
+	expected := &Locale{ID: Int(1)}
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), found, expected)
+}
+
+func (s *LocaleServiceSuite) TestGetByCode() {
+	s.mux.HandleFunc("/api/v2/locales/en-US.json", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(s.T(), "GET", r.Method)
+
+		fmt.Fprint(w, `{"locale": {"locale": "en-US"}}`)
+	})
+
+	found, err := s.client.LocaleGetByCode("en-US")
+	expected := &Locale{Locale: String("en-US")}
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), found, expected)
+}

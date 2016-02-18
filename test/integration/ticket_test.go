@@ -3,8 +3,9 @@ package integration
 import (
 	"testing"
 
-	"github.com/medigo/go-zendesk/zendesk"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/medigo/go-zendesk/zendesk"
 )
 
 func TestTicketCRUD(t *testing.T) {
