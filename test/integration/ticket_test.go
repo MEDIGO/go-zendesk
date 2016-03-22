@@ -41,4 +41,12 @@ func TestTicketCRUD(t *testing.T) {
 	assert.Equal(t, created.Subject, found.Subject)
 	assert.Equal(t, created.RequesterID, found.RequesterID)
 	assert.Equal(t, created.Tags, found.Tags)
+
+	input := zendesk.Ticket{
+		Status: zendesk.String("solved"),
+	}
+
+	updated, err := client.UpdateTicket(*created.ID, &input)
+	assert.NoError(t, err)
+	assert.Equal(t, input.Status, updated.Status)
 }

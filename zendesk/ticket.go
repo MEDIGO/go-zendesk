@@ -49,3 +49,10 @@ func (c *client) CreateTicket(ticket *Ticket) (*Ticket, error) {
 	err := c.post("/api/v2/tickets.json", in, out)
 	return out.Ticket, err
 }
+
+func (c *client) UpdateTicket(id int64, ticket *Ticket) (*Ticket, error) {
+	in := &APIPayload{Ticket: ticket}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/tickets/%d.json", id), in, out)
+	return out.Ticket, err
+}
