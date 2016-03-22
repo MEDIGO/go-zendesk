@@ -18,7 +18,7 @@ func (s *LocaleServiceSuite) TestList() {
 		fmt.Fprint(w, `{"locales": [{"id": 35436}, {"id": 9873843}]}`)
 	})
 
-	found, err := s.client.UserSearch("Gerry")
+	found, err := s.client.SearchUsers("Gerry")
 	expected := []Locale{Locale{ID: Int(35436)}, Locale{ID: Int(9873843)}}
 
 	assert.NoError(s.T(), err)
@@ -32,7 +32,7 @@ func (s *LocaleServiceSuite) TestGet() {
 		fmt.Fprint(w, `{"locale": {"id": 1}}`)
 	})
 
-	found, err := s.client.LocaleGet(1)
+	found, err := s.client.GetLocale(1)
 	expected := &Locale{ID: Int(1)}
 
 	assert.NoError(s.T(), err)
@@ -46,7 +46,7 @@ func (s *LocaleServiceSuite) TestGetByCode() {
 		fmt.Fprint(w, `{"locale": {"locale": "en-US"}}`)
 	})
 
-	found, err := s.client.LocaleGetByCode("en-US")
+	found, err := s.client.GetLocaleByCode("en-US")
 	expected := &Locale{Locale: String("en-US")}
 
 	assert.NoError(s.T(), err)

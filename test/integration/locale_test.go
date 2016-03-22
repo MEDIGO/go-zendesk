@@ -16,15 +16,15 @@ func TestLocaleCRUD(t *testing.T) {
 	client, err := zendesk.NewEnvClient()
 	assert.NoError(t, err)
 
-	listed, err := client.LocaleList()
+	listed, err := client.ListLocales()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, listed)
 
-	found, err := client.LocaleGet(1)
+	found, err := client.GetLocale(1)
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), *found.ID)
 
-	found, err = client.LocaleGetByCode("en-US")
+	found, err = client.GetLocaleByCode("en-US")
 	assert.NoError(t, err)
 	assert.Equal(t, "en-US", *found.Locale)
 }

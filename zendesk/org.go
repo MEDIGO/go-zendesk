@@ -21,13 +21,13 @@ type Organization struct {
 	OrganizationFields map[string]interface{} `json:"organization_fields,omitempty"`
 }
 
-func (c *client) OrganizationGet(id int64) (*Organization, error) {
+func (c *client) GetOrganization(id int64) (*Organization, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/organizations/%d.json", id), out)
 	return out.Organization, err
 }
 
-func (c *client) OrganizationCreate(org *Organization) (*Organization, error) {
+func (c *client) CreateOrganization(org *Organization) (*Organization, error) {
 	in := &APIPayload{Organization: org}
 	out := new(APIPayload)
 	err := c.post("/api/v2/organizations.json", in, out)

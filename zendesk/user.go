@@ -38,27 +38,27 @@ type User struct {
 	UserFields          map[string]interface{} `json:"user_fields,omitempty"`
 }
 
-func (c *client) UserGet(id int64) (*User, error) {
+func (c *client) GetUser(id int64) (*User, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
 	return out.User, err
 }
 
-func (c *client) UserCreate(user *User) (*User, error) {
+func (c *client) CreateUser(user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
 	err := c.post("/api/v2/users.json", in, out)
 	return out.User, err
 }
 
-func (c *client) UserUpdate(id int64, user *User) (*User, error) {
+func (c *client) UpdateUser(id int64, user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
 	err := c.put(fmt.Sprintf("/api/v2/users/%d.json", id), in, out)
 	return out.User, err
 }
 
-func (c *client) UserSearch(query string) ([]User, error) {
+func (c *client) SearchUsers(query string) ([]User, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/users/search.json?query="+query, out)
 	return out.Users, err

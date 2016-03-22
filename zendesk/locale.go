@@ -14,19 +14,19 @@ type Locale struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
-func (c *client) LocaleList() ([]Locale, error) {
+func (c *client) ListLocales() ([]Locale, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/locales.json", out)
 	return out.Locales, err
 }
 
-func (c *client) LocaleGet(id int64) (*Locale, error) {
+func (c *client) GetLocale(id int64) (*Locale, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/locales/%d.json", id), out)
 	return out.Locale, err
 }
 
-func (c *client) LocaleGetByCode(code string) (*Locale, error) {
+func (c *client) GetLocaleByCode(code string) (*Locale, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/locales/%s.json", code), out)
 	return out.Locale, err

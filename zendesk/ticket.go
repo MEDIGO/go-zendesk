@@ -37,13 +37,13 @@ type TicketField struct {
 	Value interface{} `json:"value"`
 }
 
-func (c *client) TicketGet(id int64) (*Ticket, error) {
+func (c *client) GetTicket(id int64) (*Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d.json", id), out)
 	return out.Ticket, err
 }
 
-func (c *client) TicketCreate(ticket *Ticket) (*Ticket, error) {
+func (c *client) CreateTicket(ticket *Ticket) (*Ticket, error) {
 	in := &APIPayload{Ticket: ticket}
 	out := new(APIPayload)
 	err := c.post("/api/v2/tickets.json", in, out)

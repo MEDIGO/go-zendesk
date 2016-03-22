@@ -20,14 +20,14 @@ func (s *TicketServiceSuite) TestGet() {
 		fmt.Fprint(w, `{"ticket": {"id": 35436, "subject": "My printer is on fire!"}}`)
 	})
 
-	found, err := s.client.TicketGet(35436)
+	found, err := s.client.GetTicket(35436)
 	expected := &Ticket{ID: Int(35436), Subject: String("My printer is on fire!")}
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), found, expected)
 }
 
-func (s *TicketServiceSuite) TestCreate() {
+func (s *TicketServiceSuite) CreateTest() {
 	input := &Ticket{Subject: String("My printer is on fire!")}
 
 	s.mux.HandleFunc("/api/v2/tickets.json", func(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +41,7 @@ func (s *TicketServiceSuite) TestCreate() {
 		fmt.Fprint(w, `{"ticket": {"id": 35436, "subject": "My printer is on fire!"}}`)
 	})
 
-	found, err := s.client.TicketCreate(input)
+	found, err := s.client.CreateTicket(input)
 	expected := &Ticket{ID: Int(35436), Subject: String("My printer is on fire!")}
 
 	assert.NoError(s.T(), err, expected)

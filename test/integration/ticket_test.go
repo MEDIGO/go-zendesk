@@ -21,7 +21,7 @@ func TestTicketCRUD(t *testing.T) {
 		Email: zendesk.String("test-" + randstr(7) + "@example.com"),
 	}
 
-	user, err = client.UserCreate(user)
+	user, err = client.CreateUser(user)
 	assert.NoError(t, err)
 
 	ticket := &zendesk.Ticket{
@@ -31,12 +31,12 @@ func TestTicketCRUD(t *testing.T) {
 		Tags:        &[]string{"test"},
 	}
 
-	created, err := client.TicketCreate(ticket)
+	created, err := client.CreateTicket(ticket)
 	assert.NoError(t, err)
 	assert.NotNil(t, created.ID)
 	assert.Len(t, *ticket.Tags, 1)
 
-	found, err := client.TicketGet(*created.ID)
+	found, err := client.GetTicket(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, created.Subject, found.Subject)
 	assert.Equal(t, created.RequesterID, found.RequesterID)

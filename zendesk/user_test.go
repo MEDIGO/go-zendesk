@@ -21,7 +21,7 @@ func (s *UserServiceSuite) TestGet() {
 		fmt.Fprint(w, `{"user": {"id": 35436, "name": "Johnny Agent"}}`)
 	})
 
-	found, err := s.client.UserGet(35436)
+	found, err := s.client.GetUser(35436)
 	expected := &User{ID: Int(35436), Name: String("Johnny Agent")}
 
 	assert.NoError(s.T(), err)
@@ -42,7 +42,7 @@ func (s *UserServiceSuite) TestCreate() {
 		fmt.Fprint(w, `{"user": {"id": 9873843, "name": "Roger Wilco", "email": "roge@example.org"}}`)
 	})
 
-	found, err := s.client.UserCreate(input)
+	found, err := s.client.CreateUser(input)
 	expected := &User{ID: Int(9873843), Name: String("Roger Wilco"), Email: String("roge@example.org")}
 
 	assert.NoError(s.T(), err)
@@ -63,7 +63,7 @@ func (s *UserServiceSuite) TestUpdate() {
 		fmt.Fprint(w, `{"user": {"id": 9873843, "name": "Roger Wilco II"}}`)
 	})
 
-	found, err := s.client.UserCreate(input)
+	found, err := s.client.CreateUser(input)
 	expected := &User{ID: Int(9873843), Name: String("Roger Wilco II")}
 
 	assert.NoError(s.T(), err)
@@ -78,7 +78,7 @@ func (s *UserServiceSuite) TestSearch() {
 		fmt.Fprint(w, `{"users": [{"id": 35436}, {"id": 9873843}]}`)
 	})
 
-	found, err := s.client.UserSearch("Gerry")
+	found, err := s.client.SearchUsers("Gerry")
 	expected := []User{User{ID: Int(35436)}, User{ID: Int(9873843)}}
 
 	assert.NoError(s.T(), err)

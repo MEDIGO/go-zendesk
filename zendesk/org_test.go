@@ -20,7 +20,7 @@ func (s *OrganizationServiceSuite) TestGet() {
 		fmt.Fprint(w, `{"organization": {"id": 35436, "name": "One Organization"}}`)
 	})
 
-	found, err := s.client.OrganizationGet(35436)
+	found, err := s.client.GetOrganization(35436)
 	expected := &Organization{ID: Int(35436), Name: String("One Organization")}
 
 	assert.NoError(s.T(), err)
@@ -41,7 +41,7 @@ func (s *OrganizationServiceSuite) TestCreate() {
 		fmt.Fprint(w, `{"organization": {"id": 35436, "name": "One Organization"}}`)
 	})
 
-	found, err := s.client.OrganizationCreate(input)
+	found, err := s.client.CreateOrganization(input)
 	expected := &Organization{ID: Int(35436), Name: String("One Organization")}
 
 	assert.NoError(s.T(), err, expected)

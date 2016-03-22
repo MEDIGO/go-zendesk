@@ -13,17 +13,17 @@ import (
 )
 
 type Client interface {
-	LocaleGet(int64) (*Locale, error)
-	LocaleGetByCode(string) (*Locale, error)
-	LocaleList() ([]Locale, error)
-	OrganizationCreate(*Organization) (*Organization, error)
-	OrganizationGet(int64) (*Organization, error)
-	TicketCreate(*Ticket) (*Ticket, error)
-	TicketGet(int64) (*Ticket, error)
-	UserCreate(*User) (*User, error)
-	UserGet(int64) (*User, error)
-	UserSearch(string) ([]User, error)
-	UserUpdate(int64, *User) (*User, error)
+	CreateOrganization(*Organization) (*Organization, error)
+	CreateTicket(*Ticket) (*Ticket, error)
+	CreateUser(*User) (*User, error)
+	GetLocale(int64) (*Locale, error)
+	GetLocaleByCode(string) (*Locale, error)
+	GetOrganization(int64) (*Organization, error)
+	GetTicket(int64) (*Ticket, error)
+	GetUser(int64) (*User, error)
+	ListLocales() ([]Locale, error)
+	SearchUsers(string) ([]User, error)
+	UpdateUser(int64, *User) (*User, error)
 }
 
 type client struct {
