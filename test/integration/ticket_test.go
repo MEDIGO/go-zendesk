@@ -49,4 +49,9 @@ func TestTicketCRUD(t *testing.T) {
 	updated, err := client.UpdateTicket(*created.ID, &input)
 	assert.NoError(t, err)
 	assert.Equal(t, input.Status, updated.Status)
+
+	requested, err := client.ListRequestedTickets(*user.ID)
+	assert.NoError(t, err)
+	assert.Len(t, requested, 1)
+	assert.Equal(t, created.ID, requested[0].ID)
 }

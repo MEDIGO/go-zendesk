@@ -22,6 +22,7 @@ type Client interface {
 	GetTicket(int64) (*Ticket, error)
 	GetUser(int64) (*User, error)
 	ListLocales() ([]Locale, error)
+	ListRequestedTickets(int64) ([]Ticket, error)
 	SearchUsers(string) ([]User, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
