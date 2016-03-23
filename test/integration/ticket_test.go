@@ -50,3 +50,29 @@ func TestTicketCRUD(t *testing.T) {
 	assert.Len(t, requested, 1)
 	assert.Equal(t, created.ID, requested[0].ID)
 }
+
+func TestUpdateManyTickets(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := zendesk.NewEnvClient()
+	assert.NoError(t, err)
+
+	user, err := RandUser(client)
+
+	one, err := RandTicket(client, user)
+	two, err := RandTicket(client, user)
+
+	updates := []zendesk.Ticket{
+		{ID: one.ID, Status: zendesk.String("solved")},
+		{ID: two.ID, Status: zendesk.String("solved")},
+	}
+
+	updated, err := client.UpdateManyTickets(updates)
+	assert.NoError(t, err)
+
+	for _, ticket := range updated {
+		assert.Equal(t, "solved", *ticket.Status)
+	}
+}

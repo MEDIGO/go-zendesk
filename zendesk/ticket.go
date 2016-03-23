@@ -58,6 +58,13 @@ func (c *client) UpdateTicket(id int64, ticket *Ticket) (*Ticket, error) {
 	return out.Ticket, err
 }
 
+func (c *client) UpdateManyTickets(tickets []Ticket) ([]Ticket, error) {
+	in := &APIPayload{Tickets: tickets}
+	out := new(APIPayload)
+	err := c.put("/api/v2/tickets/update_many.json", in, out)
+	return out.Tickets, err
+}
+
 func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d/tickets/requested.json", userID), out)

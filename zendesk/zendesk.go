@@ -26,6 +26,7 @@ type Client interface {
 	ListTicketComments(int64) ([]TicketComment, error)
 	SearchUsers(string) ([]User, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
+	UpdateManyTickets([]Ticket) ([]Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
 }
 
