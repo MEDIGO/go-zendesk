@@ -17,7 +17,7 @@ func TestOrganizationCRUD(t *testing.T) {
 	assert.NoError(t, err)
 
 	input := zendesk.Organization{
-		Name: zendesk.String("test-" + randstr(7)),
+		Name: zendesk.String("test-" + RandString(7)),
 		OrganizationFields: map[string]interface{}{
 			"test": "this is a test",
 		},

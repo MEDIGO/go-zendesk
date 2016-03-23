@@ -16,25 +16,20 @@ func TestTicketCRUD(t *testing.T) {
 	client, err := zendesk.NewEnvClient()
 	assert.NoError(t, err)
 
-	user := &zendesk.User{
-		Name:  zendesk.String("test-" + randstr(7)),
-		Email: zendesk.String("test-" + randstr(7) + "@example.com"),
-	}
-
-	user, err = client.CreateUser(user)
+	user, err := RandUser(client)
 	assert.NoError(t, err)
 
 	ticket := &zendesk.Ticket{
-		Subject:     zendesk.String("test-" + randstr(7)),
-		Description: zendesk.String("test-" + randstr(7)),
+		Subject:     zendesk.String("My printer is on fire!"),
+		Description: zendesk.String("The smoke is very colorful."),
 		RequesterID: user.ID,
-		Tags:        &[]string{"test"},
+		Tags:        []string{"test"},
 	}
 
 	created, err := client.CreateTicket(ticket)
 	assert.NoError(t, err)
 	assert.NotNil(t, created.ID)
-	assert.Len(t, *ticket.Tags, 1)
+	assert.Len(t, ticket.Tags, 1)
 
 	found, err := client.GetTicket(*created.ID)
 	assert.NoError(t, err)

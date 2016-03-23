@@ -17,8 +17,8 @@ func TestUserCRUD(t *testing.T) {
 	assert.NoError(t, err)
 
 	input := zendesk.User{
-		Name:  zendesk.String("test-" + randstr(7)),
-		Email: zendesk.String("test-" + randstr(7) + "@example.com"),
+		Name:  zendesk.String(RandString(16)),
+		Email: zendesk.String(RandString(16) + "@example.com"),
 		UserFields: map[string]interface{}{
 			"test": "this is a test",
 		},
@@ -38,7 +38,7 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, input.UserFields["test"].(string), found.UserFields["test"].(string))
 
 	input = zendesk.User{
-		Name: zendesk.String("test-" + randstr(7)),
+		Name: zendesk.String("Testy Testacular"),
 	}
 
 	updated, err := client.UpdateUser(*created.ID, &input)
