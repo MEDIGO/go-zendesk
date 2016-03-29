@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/medigo/go-zendesk/zendesk"
+	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestTicketCRUD(t *testing.T) {

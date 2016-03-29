@@ -3,7 +3,7 @@ package integration
 import (
 	"testing"
 
-	"github.com/medigo/go-zendesk/zendesk"
+	"github.com/MEDIGO/go-zendesk/zendesk"
 	"github.com/stretchr/testify/assert"
 )
 

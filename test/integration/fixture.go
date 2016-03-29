@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 
-	"github.com/medigo/go-zendesk/zendesk"
+	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func RandString(l int) string {
