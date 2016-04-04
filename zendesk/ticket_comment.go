@@ -6,13 +6,14 @@ import (
 )
 
 type TicketComment struct {
-	ID        *int64     `json:"id,omitempty"`
-	Type      *string    `json:"type,omitempty"`
-	Body      *string    `json:"body,omitempty"`
-	HTMLBody  *string    `json:"html_body,omitempty"`
-	Public    *bool      `json:"public,omitempty"`
-	AuthorID  *int64     `json:"author_id,omitempty"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
+	ID          *int64       `json:"id,omitempty"`
+	Type        *string      `json:"type,omitempty"`
+	Body        *string      `json:"body,omitempty"`
+	HTMLBody    *string      `json:"html_body,omitempty"`
+	Public      *bool        `json:"public,omitempty"`
+	AuthorID    *int64       `json:"author_id,omitempty"`
+	Attachments []Attachment `json:"attachments,omitempty"`
+	CreatedAt   *time.Time   `json:"created_at,omitempty"`
 }
 
 func (c *client) ListTicketComments(id int64) ([]TicketComment, error) {
