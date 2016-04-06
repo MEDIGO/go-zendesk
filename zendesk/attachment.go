@@ -5,6 +5,6 @@ type Attachment struct {
 	FileName    *string `json:"file_name,omitempty"`
 	ContentURL  *string `json:"content_url,omitempty"`
 	ContentType *string `json:"content_type,omitempty"`
-	Size        *string `json:"size,omitempty"`
+	Size        *int64  `json:"size,omitempty"`
 	Inline      *bool   `json:"inline,omitempty"`
 }
