@@ -28,6 +28,7 @@ type Ticket struct {
 	HasIncidents    *bool          `json:"has_incidents,omitempty"`
 	DueAt           *time.Time     `json:"due_at,omitempty"`
 	Tags            []string       `json:"tags,omitempty"`
+	Via             *Via           `json:"via,omitempty"`
 	CreatedAt       *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt       *time.Time     `json:"updated_at,omitempty"`
 	CustomFields    []TicketField  `json:"custom_fields,omitempty"`
