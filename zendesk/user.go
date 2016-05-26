@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// User represents a Zendesk user.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#content
 type User struct {
 	ID                  *int64                 `json:"id,omitempty"`
 	URL                 *string                `json:"url,omitempty"`
@@ -38,12 +41,18 @@ type User struct {
 	UserFields          map[string]interface{} `json:"user_fields,omitempty"`
 }
 
-func (c *client) GetUser(id int64) (*User, error) {
+// ShowUser fetches a user by its ID.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#show-user
+func (c *client) ShowUser(id int64) (*User, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
 	return out.User, err
 }
 
+// CreateUser creates a user.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#create-user
 func (c *client) CreateUser(user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
@@ -51,6 +60,9 @@ func (c *client) CreateUser(user *User) (*User, error) {
 	return out.User, err
 }
 
+// UpdateUser updates a user.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#update-user
 func (c *client) UpdateUser(id int64, user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
@@ -58,6 +70,9 @@ func (c *client) UpdateUser(id int64, user *User) (*User, error) {
 	return out.User, err
 }
 
+// SearchUsers searches users by name or email address.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#search-users
 func (c *client) SearchUsers(query string) ([]User, error) {
 	out := new(APIPayload)
 	err := c.get("/api/v2/users/search.json?query="+query, out)

@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// Organization represents a Zendesk organization.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations
 type Organization struct {
 	ID                 *int64                 `json:"id,omitempty"`
 	URL                *string                `json:"url,omitempty"`
@@ -21,12 +24,18 @@ type Organization struct {
 	OrganizationFields map[string]interface{} `json:"organization_fields,omitempty"`
 }
 
-func (c *client) GetOrganization(id int64) (*Organization, error) {
+// ShowOrganization fetches an organization by its ID.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#show-organization
+func (c *client) ShowOrganization(id int64) (*Organization, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/organizations/%d.json", id), out)
 	return out.Organization, err
 }
 
+// CreateOrganization creates an organization.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization
 func (c *client) CreateOrganization(org *Organization) (*Organization, error) {
 	in := &APIPayload{Organization: org}
 	out := new(APIPayload)

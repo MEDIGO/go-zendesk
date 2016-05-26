@@ -29,7 +29,7 @@ func TestOrganizationCRUD(t *testing.T) {
 	assert.Equal(t, *input.Name, *created.Name)
 	assert.Equal(t, input.OrganizationFields["test"].(string), "this is a test")
 
-	found, err := client.GetOrganization(*created.ID)
+	found, err := client.ShowOrganization(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)

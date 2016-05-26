@@ -20,11 +20,11 @@ func TestLocaleCRUD(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, listed)
 
-	found, err := client.GetLocale(1)
+	found, err := client.ShowLocale(1)
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), *found.ID)
 
-	found, err = client.GetLocaleByCode("en-US")
+	found, err = client.ShowLocaleByCode("en-US")
 	assert.NoError(t, err)
 	assert.Equal(t, "en-US", *found.Locale)
 }

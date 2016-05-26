@@ -20,13 +20,13 @@ func (c *client) ListLocales() ([]Locale, error) {
 	return out.Locales, err
 }
 
-func (c *client) GetLocale(id int64) (*Locale, error) {
+func (c *client) ShowLocale(id int64) (*Locale, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/locales/%d.json", id), out)
 	return out.Locale, err
 }
 
-func (c *client) GetLocaleByCode(code string) (*Locale, error) {
+func (c *client) ShowLocaleByCode(code string) (*Locale, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/locales/%s.json", code), out)
 	return out.Locale, err

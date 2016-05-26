@@ -30,7 +30,7 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, *input.Name, *created.Name)
 	assert.Equal(t, *input.Email, *created.Email)
 
-	found, err := client.GetUser(*created.ID)
+	found, err := client.ShowUser(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)

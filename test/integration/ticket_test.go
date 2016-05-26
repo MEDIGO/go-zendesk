@@ -31,7 +31,7 @@ func TestTicketCRUD(t *testing.T) {
 	assert.NotNil(t, created.ID)
 	assert.Len(t, ticket.Tags, 1)
 
-	found, err := client.GetTicket(*created.ID)
+	found, err := client.ShowTicket(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, created.Subject, found.Subject)
 	assert.Equal(t, created.RequesterID, found.RequesterID)
