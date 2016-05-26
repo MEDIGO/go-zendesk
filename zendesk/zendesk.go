@@ -153,7 +153,7 @@ type APIError struct {
 
 	Type        *string                       `json:"error,omitmepty"`
 	Description *string                       `json:"description,omitempty"`
-	Details     *map[string][]*APIErrorDetail `json: "details,omitempty"`
+	Details     *map[string][]*APIErrorDetail `json:"details,omitempty"`
 }
 
 func (e *APIError) Error() string {
