@@ -17,6 +17,7 @@ type Client interface {
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
 	ListLocales() ([]Locale, error)
+	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	SearchUsers(string) ([]User, error)
@@ -196,4 +197,14 @@ func Int(i int64) *int64 {
 func String(s string) *string {
 	p := s
 	return &p
+}
+
+// ListOptions specifies the optional parameters for the list methods that support pagination.
+//
+// Zendesk Core API doscs: https://developer.zendesk.com/rest_api/docs/core/introduction#pagination
+type ListOptions struct {
+	// Sets the page of results to retrieve.
+	Page int `url:"page,omitempty"`
+	// Sets the number of results to include per page.
+	PerPage int `url:"per_page,omitempty"`
 }

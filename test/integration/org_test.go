@@ -35,3 +35,21 @@ func TestOrganizationCRUD(t *testing.T) {
 	assert.Equal(t, *input.Name, *found.Name)
 	assert.Equal(t, input.OrganizationFields["test"].(string), found.OrganizationFields["test"].(string))
 }
+
+func TestOrganizationList(t *testing.T) {
+	client, err := zendesk.NewEnvClient()
+	assert.NoError(t, err)
+
+	_, err = client.CreateOrganization(&zendesk.Organization{Name: zendesk.String("test-" + RandString(7))})
+	_, err = client.CreateOrganization(&zendesk.Organization{Name: zendesk.String("test-" + RandString(7))})
+
+	first, err := client.ListOrganizations(&zendesk.ListOptions{PerPage: 1})
+	assert.NoError(t, err)
+	assert.Len(t, first, 1)
+
+	second, err := client.ListOrganizations(&zendesk.ListOptions{Page: 2, PerPage: 1})
+	assert.NoError(t, err)
+	assert.Len(t, first, 1)
+
+	assert.NotEqual(t, *first[0].ID, *second[0].ID)
+}

@@ -3,6 +3,8 @@ package zendesk
 import (
 	"fmt"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Organization represents a Zendesk organization.
@@ -41,4 +43,18 @@ func (c *client) CreateOrganization(org *Organization) (*Organization, error) {
 	out := new(APIPayload)
 	err := c.post("/api/v2/organizations.json", in, out)
 	return out.Organization, err
+}
+
+// ListOrganizations list all organizations.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#list-organizations
+func (c *client) ListOrganizations(opts *ListOptions) ([]Organization, error) {
+	params, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	out := new(APIPayload)
+	err = c.get("/api/v2/organizations.json?"+params.Encode(), out)
+	return out.Organizations, err
 }
