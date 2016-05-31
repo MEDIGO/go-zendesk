@@ -3,6 +3,8 @@ package zendesk
 import (
 	"fmt"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // User represents a Zendesk user.
@@ -68,6 +70,28 @@ func (c *client) UpdateUser(id int64, user *User) (*User, error) {
 	out := new(APIPayload)
 	err := c.put(fmt.Sprintf("/api/v2/users/%d.json", id), in, out)
 	return out.User, err
+}
+
+// ListUsersOptions specifies the optional parameters for the list users methods.
+type ListUsersOptions struct {
+	ListOptions
+
+	Role          []string `url:"role"`
+	PermissionSet int64    `url:"permision_set"`
+}
+
+// ListOrganizationUsers list the users associated to an organization.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#list-users
+func (c *client) ListOrganizationUsers(id int64, opts *ListUsersOptions) ([]User, error) {
+	params, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/organizations/%d/users.json?%s", id, params.Encode()), out)
+	return out.Users, err
 }
 
 // SearchUsers searches users by name or email address.

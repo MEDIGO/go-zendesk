@@ -50,3 +50,29 @@ func TestUserCRUD(t *testing.T) {
 	assert.Len(t, searched, 1)
 	assert.Equal(t, updated, &searched[0])
 }
+
+func TestListOrganizationUsers(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := zendesk.NewEnvClient()
+	assert.NoError(t, err)
+
+	org, err := client.CreateOrganization(&zendesk.Organization{
+		Name: zendesk.String("test-" + RandString(7)),
+	})
+	assert.NoError(t, err)
+
+	user, err := client.CreateUser(&zendesk.User{
+		Name:           zendesk.String(RandString(16)),
+		Email:          zendesk.String(RandString(16) + "@example.com"),
+		OrganizationID: org.ID,
+	})
+	assert.NoError(t, err)
+
+	found, err := client.ListOrganizationUsers(*org.ID, nil)
+	assert.NoError(t, err)
+	assert.Len(t, found, 1)
+	assert.Equal(t, *user.ID, *found[0].ID)
+}

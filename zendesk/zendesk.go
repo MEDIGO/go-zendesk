@@ -18,6 +18,7 @@ type Client interface {
 	CreateUser(*User) (*User, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
+	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	SearchUsers(string) ([]User, error)

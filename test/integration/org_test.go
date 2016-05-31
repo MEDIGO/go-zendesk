@@ -37,6 +37,10 @@ func TestOrganizationCRUD(t *testing.T) {
 }
 
 func TestOrganizationList(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
 	client, err := zendesk.NewEnvClient()
 	assert.NoError(t, err)
 
