@@ -6,6 +6,22 @@ client library for Go.
 This library is used internally at MEDIGO and the API resources are being implemented as needed.
 **It's work in progress. Use with caution.**
 
+## Usage
+
+```go
+package main
+
+import "github.com/MEDIGO/go-zendesk/zendesk"
+
+func main() {
+  zendeskcl, err := zendesk.NewClient("your-zendesk-domain", "your-username", "your-api-password")
+
+  if err != nil {
+    // I can now use zendesk client...
+  }
+}
+```
+
 ## Development
 
 ### Linting
