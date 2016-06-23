@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 )
 
 type Client interface {
@@ -30,6 +29,7 @@ type Client interface {
 	UpdateManyTickets([]Ticket) ([]Ticket, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
+	UploadFile(filename string, filecontent io.Reader) (*Upload, error)
 }
 
 type client struct {
@@ -74,55 +74,44 @@ func NewClient(domain, username, password string) (Client, error) {
 	}, err
 }
 
-func (c *client) do(method, endpoint string, in interface{}, out interface{}) error {
+func (c *client) request(method, endpoint string, headers map[string]string, body io.Reader) (*http.Response, error) {
 	rel, err := url.Parse(endpoint)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	url := c.baseURL.ResolveReference(rel)
-	req, err := http.NewRequest(method, url.String(), nil)
+	req, err := http.NewRequest(method, url.String(), body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req.SetBasicAuth(c.username, c.password)
 	req.Header.Set("User-Agent", c.userAgent)
 
-	if in != nil {
-		payload, err := json.Marshal(in)
-		if err != nil {
-			return err
-		}
-
-		buf := bytes.NewBuffer(payload)
-		req.Body = ioutil.NopCloser(buf)
-
-		req.ContentLength = int64(len(payload))
-		req.Header.Set("Content-Length", strconv.Itoa(len(payload)))
-		req.Header.Set("Content-Type", "application/json")
+	for key, value := range headers {
+		req.Header.Set(key, value)
 	}
 
-	res, err := http.DefaultClient.Do(req)
+	return http.DefaultClient.Do(req)
+}
+
+func (c *client) do(method, endpoint string, in, out interface{}) error {
+	body, err := marshall(in)
 	if err != nil {
 		return err
 	}
 
-	defer res.Body.Close()
-
-	if code := res.StatusCode; 200 <= code && code <= 299 {
-		if out != nil {
-			return json.NewDecoder(res.Body).Decode(out)
-		} else {
-			return nil
-		}
+	headers := map[string]string{
+		"Content-Type": "application/json",
 	}
 
-	apierr := new(APIError)
-	apierr.Response = res
-	json.NewDecoder(res.Body).Decode(apierr)
+	res, err := c.request(method, endpoint, headers, body)
+	if err != nil {
+		return err
+	}
 
-	return apierr
+	return unmarshall(res, out)
 }
 
 func (c *client) get(endpoint string, out interface{}) error {
@@ -137,7 +126,40 @@ func (c *client) put(endpoint string, in, out interface{}) error {
 	return c.do("PUT", endpoint, in, out)
 }
 
+func marshall(in interface{}) (io.Reader, error) {
+	if in == nil {
+		return nil, nil
+	}
+
+	payload, err := json.Marshal(in)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewBuffer(payload), nil
+}
+
+func unmarshall(res *http.Response, out interface{}) error {
+	if res.StatusCode < 200 || res.StatusCode >= 300 {
+		apierr := new(APIError)
+		apierr.Response = res
+		if err := json.NewDecoder(res.Body).Decode(apierr); err != nil {
+			apierr.Type = String("Unknown")
+			apierr.Description = String("Oops! Something went wrong when parsing the error response.")
+		}
+		return apierr
+	}
+
+	if out != nil {
+		return json.NewDecoder(res.Body).Decode(out)
+	}
+
+	return nil
+}
+
 type APIPayload struct {
+	Attachment    *Attachment     `json:"attachment"`
+	Attachments   []Attachment    `json:"attachments"`
 	Comment       *TicketComment  `json:"comment,omitempty"`
 	Comments      []TicketComment `json:"comments,omitempty"`
 	Locale        *Locale         `json:"locale,omitempty"`
@@ -146,6 +168,7 @@ type APIPayload struct {
 	Organizations []Organization  `json:"organizations,omitempty"`
 	Ticket        *Ticket         `json:"ticket,omitempty"`
 	Tickets       []Ticket        `json:"tickets,omitempty"`
+	Upload        *Upload         `json:"upload,omitempty"`
 	User          *User           `json:"user,omitempty"`
 	Users         []User          `json:"users,omitempty"`
 }
