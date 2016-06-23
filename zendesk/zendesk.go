@@ -20,6 +20,7 @@ type Client interface {
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
+	ListTicketIncidents(int64) ([]Ticket, error)
 	SearchUsers(string) ([]User, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)

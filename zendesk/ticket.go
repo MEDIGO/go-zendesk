@@ -71,3 +71,11 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	err := c.get(fmt.Sprintf("/api/v2/users/%d/tickets/requested.json", userID), out)
 	return out.Tickets, err
 }
+
+// ListTicketIncidents list all incidents related to the problem
+func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/incidents.json", problemID), out)
+
+	return out.Tickets, err
+}

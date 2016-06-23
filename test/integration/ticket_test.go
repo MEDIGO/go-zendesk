@@ -76,3 +76,42 @@ func TestUpdateManyTickets(t *testing.T) {
 		assert.Equal(t, "solved", *ticket.Status)
 	}
 }
+
+func TestListTicketIncidents(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := zendesk.NewEnvClient()
+	assert.NoError(t, err)
+
+	user, err := RandUser(client)
+	assert.NoError(t, err)
+
+	ticket, err := RandTicket(client, user)
+	assert.NoError(t, err)
+
+	incident1 := &zendesk.Ticket{
+		Description: zendesk.String("Fire alarm trigger"),
+		RequesterID: user.ID,
+		Type:        zendesk.String("incident"),
+		ProblemID:   ticket.ID,
+	}
+
+	incident2 := &zendesk.Ticket{
+		Description: zendesk.String("Building evacuation"),
+		RequesterID: user.ID,
+		Type:        zendesk.String("incident"),
+		ProblemID:   ticket.ID,
+	}
+
+	_, err = client.CreateTicket(incident1)
+	assert.NoError(t, err)
+	_, err = client.CreateTicket(incident2)
+	assert.NoError(t, err)
+
+	incidents, err := client.ListTicketIncidents(*ticket.ID)
+
+	assert.NoError(t, err)
+	assert.Len(t, incidents, 2)
+}
