@@ -31,10 +31,10 @@ type Ticket struct {
 	Via             *Via           `json:"via,omitempty"`
 	CreatedAt       *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt       *time.Time     `json:"updated_at,omitempty"`
-	CustomFields    []TicketField  `json:"custom_fields,omitempty"`
+	CustomFields    []CustomField  `json:"custom_fields,omitempty"`
 }
 
-type TicketField struct {
+type CustomField struct {
 	ID    *int64      `json:"id"`
 	Value interface{} `json:"value"`
 }
