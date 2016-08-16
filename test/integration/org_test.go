@@ -18,22 +18,16 @@ func TestOrganizationCRUD(t *testing.T) {
 
 	input := zendesk.Organization{
 		Name: zendesk.String("test-" + RandString(7)),
-		OrganizationFields: map[string]interface{}{
-			"test": "this is a test",
-		},
 	}
 
 	created, err := client.CreateOrganization(&input)
 	assert.NoError(t, err)
 	assert.NotNil(t, created.ID)
 	assert.Equal(t, *input.Name, *created.Name)
-	assert.Equal(t, input.OrganizationFields["test"].(string), "this is a test")
-
 	found, err := client.ShowOrganization(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
-	assert.Equal(t, input.OrganizationFields["test"].(string), found.OrganizationFields["test"].(string))
 }
 
 func TestOrganizationList(t *testing.T) {

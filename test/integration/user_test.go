@@ -19,9 +19,6 @@ func TestUserCRUD(t *testing.T) {
 	input := zendesk.User{
 		Name:  zendesk.String(RandString(16)),
 		Email: zendesk.String(RandString(16) + "@example.com"),
-		UserFields: map[string]interface{}{
-			"test": "this is a test",
-		},
 	}
 
 	created, err := client.CreateUser(&input)
@@ -35,7 +32,6 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
 	assert.Equal(t, *input.Email, *found.Email)
-	assert.Equal(t, input.UserFields["test"].(string), found.UserFields["test"].(string))
 
 	input = zendesk.User{
 		Name: zendesk.String("Testy Testacular"),
