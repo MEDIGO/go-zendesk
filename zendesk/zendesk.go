@@ -31,6 +31,7 @@ type Client interface {
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
 	UploadFile(filename string, filecontent io.Reader) (*Upload, error)
+	ListTicketFields() ([]TicketField, error)
 }
 
 type client struct {
@@ -172,6 +173,8 @@ type APIPayload struct {
 	Upload        *Upload         `json:"upload,omitempty"`
 	User          *User           `json:"user,omitempty"`
 	Users         []User          `json:"users,omitempty"`
+	TicketField   *TicketField		`json:"ticket_field,omitempty"`
+	TicketFields  []TicketField		`json:"ticket_fields,omitempty"`
 }
 
 type APIError struct {
