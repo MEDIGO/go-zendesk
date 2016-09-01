@@ -116,6 +116,8 @@ func (c *client) do(method, endpoint string, in, out interface{}) error {
 		return err
 	}
 
+	defer res.Body.Close()
+
 	return unmarshall(res, out)
 }
 
