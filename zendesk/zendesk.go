@@ -11,6 +11,7 @@ import (
 	"os"
 )
 
+// Client describes a client for the Zendesk Core API.
 type Client interface {
 	CreateOrganization(*Organization) (*Organization, error)
 	CreateTicket(*Ticket) (*Ticket, error)
@@ -43,6 +44,7 @@ type client struct {
 	userAgent string
 }
 
+// NewEnvClient creates a new Client configured via environment variables.
 func NewEnvClient() (Client, error) {
 	domain := os.Getenv("ZENDESK_DOMAIN")
 	if domain == "" {
@@ -62,6 +64,7 @@ func NewEnvClient() (Client, error) {
 	return NewClient(domain, username, password)
 }
 
+// NewClient creates a new Client.
 func NewClient(domain, username, password string) (Client, error) {
 	baseURL, err := url.Parse(fmt.Sprintf("https://%s.zendesk.com", domain))
 	if err != nil {
@@ -159,6 +162,7 @@ func unmarshall(res *http.Response, out interface{}) error {
 	return nil
 }
 
+// APIPayload represents the payload of an API call.
 type APIPayload struct {
 	Attachment    *Attachment     `json:"attachment"`
 	Attachments   []Attachment    `json:"attachments"`
@@ -173,10 +177,11 @@ type APIPayload struct {
 	Upload        *Upload         `json:"upload,omitempty"`
 	User          *User           `json:"user,omitempty"`
 	Users         []User          `json:"users,omitempty"`
-	TicketField   *TicketField		`json:"ticket_field,omitempty"`
-	TicketFields  []TicketField		`json:"ticket_fields,omitempty"`
+	TicketField   *TicketField    `json:"ticket_field,omitempty"`
+	TicketFields  []TicketField   `json:"ticket_fields,omitempty"`
 }
 
+// APIError represents an error response returnted by the API.
 type APIError struct {
 	Response *http.Response
 
@@ -203,6 +208,7 @@ func (e *APIError) Error() string {
 	return msg
 }
 
+// APIErrorDetail represents a detail about an APIError.
 type APIErrorDetail struct {
 	Type        *string `json:"error,omitempty"`
 	Description *string `json:"description,omitempty"`
@@ -212,16 +218,19 @@ func (e *APIErrorDetail) Error() string {
 	return fmt.Sprintf("%s: %s", *e.Type, *e.Description)
 }
 
+// Bool is a helper function that returns a pointer to the bool value b.
 func Bool(b bool) *bool {
 	p := b
 	return &p
 }
 
+// Int is a helper function that returns a pointer to the int value i.
 func Int(i int64) *int64 {
 	p := i
 	return &p
 }
 
+// String is a helper function that returns a pointer to the string value s.
 func String(s string) *string {
 	p := s
 	return &p

@@ -1,7 +1,6 @@
 # Go-Zendesk
 
-Go-Zendesk is a [Zendesk API](https://developer.zendesk.com/rest_api/docs/core/introduction)
-client library for Go.
+Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
 
 This library is used internally at MEDIGO and the API resources are being implemented as needed.
 **It's work in progress. Use with caution.**
@@ -34,8 +33,7 @@ $ make lint
 
 ### Testing
 
-The project contains integration tests that uses the Zendesk API. To execute them we must have access
-to a it and configure the following environment variables:
+The project contains integration tests that uses the Zendesk API. To execute them we must have access to a it and configure the following environment variables:
 
 | Name             | Description
 | ---------------- | ----------------------------------
