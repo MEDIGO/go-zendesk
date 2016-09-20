@@ -45,6 +45,16 @@ func (c *client) CreateOrganization(org *Organization) (*Organization, error) {
 	return out.Organization, err
 }
 
+// UpdateOrganization updates an organization.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#update-organization
+func (c *client) UpdateOrganization(id int64, org *Organization) (*Organization, error) {
+	in := &APIPayload{Organization: org}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/organizations/%d.json", id), in, out)
+	return out.Organization, err
+}
+
 // ListOrganizations list all organizations.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#list-organizations

@@ -20,14 +20,27 @@ func TestOrganizationCRUD(t *testing.T) {
 		Name: zendesk.String("test-" + RandString(7)),
 	}
 
+	// it should create an organization
 	created, err := client.CreateOrganization(&input)
 	assert.NoError(t, err)
 	assert.NotNil(t, created.ID)
 	assert.Equal(t, *input.Name, *created.Name)
+
+	// it should show an organization
 	found, err := client.ShowOrganization(*created.ID)
 	assert.NoError(t, err)
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
+
+	name := "test-" + RandString(7)
+
+	// it should update an organization
+	updated, err := client.UpdateOrganization(*found.ID, &zendesk.Organization{
+		Name: zendesk.String(name),
+	})
+
+	assert.NoError(t, err)
+	assert.Equal(t, name, *updated.Name)
 }
 
 func TestOrganizationList(t *testing.T) {

@@ -21,6 +21,7 @@ type Client interface {
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
+	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
 	SearchUsers(string) ([]User, error)
 	ShowLocale(int64) (*Locale, error)
@@ -29,10 +30,10 @@ type Client interface {
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)
 	UpdateManyTickets([]Ticket) ([]Ticket, error)
+	UpdateOrganization(int64, *Organization) (*Organization, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
-	UploadFile(filename string, filecontent io.Reader) (*Upload, error)
-	ListTicketFields() ([]TicketField, error)
+	UploadFile(string, io.Reader) (*Upload, error)
 }
 
 type client struct {
