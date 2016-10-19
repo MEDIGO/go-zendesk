@@ -1,5 +1,7 @@
 # Go-Zendesk
 
+Maintainer: Diego
+
 Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
 
 This library is used internally at MEDIGO and the API resources are being implemented as needed.
