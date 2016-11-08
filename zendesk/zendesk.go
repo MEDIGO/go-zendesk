@@ -218,7 +218,17 @@ type APIErrorDetail struct {
 }
 
 func (e *APIErrorDetail) Error() string {
-	return fmt.Sprintf("%s: %s", *e.Type, *e.Description)
+	msg := ""
+
+	if e.Type != nil {
+		msg = *e.Type + ": "
+	}
+
+	if e.Description != nil {
+		msg += *e.Description
+	}
+
+	return msg
 }
 
 // Bool is a helper function that returns a pointer to the bool value b.
