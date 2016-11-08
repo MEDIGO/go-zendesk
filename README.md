@@ -1,6 +1,6 @@
 # Go-Zendesk
 
-Maintainer: Diego
+[![CircleCI](https://circleci.com/gh/MEDIGO/go-zendesk.svg?style=shield)](https://circleci.com/gh/MEDIGO/go-zendesk)
 
 Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
 
@@ -50,6 +50,6 @@ Then, to run the test, use the command:
 $ make test
 ```
 
-## License
+## Copyright and license
 
-MIT
+Copyright © 2016 MEDIGO GmbH. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.
