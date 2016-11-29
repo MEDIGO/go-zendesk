@@ -26,6 +26,7 @@ type Client interface {
 	SearchUsers(string) ([]User, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)
+	ShowManyUsers([]int64) ([]User, error)
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)

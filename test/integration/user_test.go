@@ -45,6 +45,16 @@ func TestUserCRUD(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, searched, 1)
 	assert.Equal(t, updated, &searched[0])
+
+	other, err := client.CreateUser(&zendesk.User{
+		Name:  zendesk.String(RandString(16)),
+		Email: zendesk.String(RandString(16) + "@example.com"),
+	})
+	assert.NoError(t, err)
+
+	many, err := client.ShowManyUsers([]int64{*created.ID, *other.ID})
+	assert.NoError(t, err)
+	assert.Len(t, many, 2)
 }
 
 func TestListOrganizationUsers(t *testing.T) {

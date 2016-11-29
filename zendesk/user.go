@@ -2,6 +2,8 @@ package zendesk
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/go-querystring/query"
@@ -50,6 +52,17 @@ func (c *client) ShowUser(id int64) (*User, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d.json", id), out)
 	return out.User, err
+}
+
+func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
+	sids := []string{}
+	for _, id := range ids {
+		sids = append(sids, strconv.FormatInt(id, 10))
+	}
+
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/users/show_many.json?ids=%s", strings.Join(sids, ",")), out)
+	return out.Users, err
 }
 
 // CreateUser creates a user.
