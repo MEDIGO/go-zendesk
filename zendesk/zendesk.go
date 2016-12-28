@@ -16,6 +16,7 @@ type Client interface {
 	CreateOrganization(*Organization) (*Organization, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
+	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
@@ -168,21 +169,22 @@ func unmarshall(res *http.Response, out interface{}) error {
 
 // APIPayload represents the payload of an API call.
 type APIPayload struct {
-	Attachment    *Attachment     `json:"attachment"`
-	Attachments   []Attachment    `json:"attachments"`
-	Comment       *TicketComment  `json:"comment,omitempty"`
-	Comments      []TicketComment `json:"comments,omitempty"`
-	Locale        *Locale         `json:"locale,omitempty"`
-	Locales       []Locale        `json:"locales,omitempty"`
-	Organization  *Organization   `json:"organization,omitempty"`
-	Organizations []Organization  `json:"organizations,omitempty"`
-	Ticket        *Ticket         `json:"ticket,omitempty"`
-	Tickets       []Ticket        `json:"tickets,omitempty"`
-	Upload        *Upload         `json:"upload,omitempty"`
-	User          *User           `json:"user,omitempty"`
-	Users         []User          `json:"users,omitempty"`
-	TicketField   *TicketField    `json:"ticket_field,omitempty"`
-	TicketFields  []TicketField   `json:"ticket_fields,omitempty"`
+	Attachment    			*Attachment     			`json:"attachment"`
+	Attachments   			[]Attachment    			`json:"attachments"`
+	Comment       			*TicketComment  			`json:"comment,omitempty"`
+	Comments      			[]TicketComment 			`json:"comments,omitempty"`
+	Locale        			*Locale         			`json:"locale,omitempty"`
+	Locales       			[]Locale        			`json:"locales,omitempty"`
+	Organization  			*Organization   			`json:"organization,omitempty"`
+	Organizations 			[]Organization  			`json:"organizations,omitempty"`
+	Ticket        			*Ticket         			`json:"ticket,omitempty"`
+	Tickets       			[]Ticket        			`json:"tickets,omitempty"`
+	Upload        			*Upload         			`json:"upload,omitempty"`
+	User          			*User           			`json:"user,omitempty"`
+	Users         			[]User          			`json:"users,omitempty"`
+	TicketField   			*TicketField    			`json:"ticket_field,omitempty"`
+	TicketFields  			[]TicketField   			`json:"ticket_fields,omitempty"`
+	OrganizationMembership	*OrganizationMembership		`json:"organization_membership,omitempty"` 	
 }
 
 // APIError represents an error response returnted by the API.
