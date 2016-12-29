@@ -22,6 +22,14 @@ func RandUser(client zendesk.Client) (*zendesk.User, error) {
 	return client.CreateUser(user)
 }
 
+func RandOrg(client zendesk.Client) (*zendesk.Organization, error) {
+	org := &zendesk.Organization{
+		Name:  zendesk.String("Very Fake Clinic - " + RandString(16)),
+	}
+
+	return client.CreateOrganization(org)
+}
+
 func RandTicket(client zendesk.Client, user *zendesk.User) (*zendesk.Ticket, error) {
 	ticket := &zendesk.Ticket{
 		Subject:     zendesk.String("My printer is on fire!"),
