@@ -20,6 +20,7 @@ type Client interface {
 	ListLocales() ([]Locale, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
+	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error) 
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketFields() ([]TicketField, error)
@@ -185,6 +186,7 @@ type APIPayload struct {
 	TicketField   			*TicketField    			`json:"ticket_field,omitempty"`
 	TicketFields  			[]TicketField   			`json:"ticket_fields,omitempty"`
 	OrganizationMembership	*OrganizationMembership		`json:"organization_membership,omitempty"` 	
+	OrganizationMemberships	[]OrganizationMembership	`json:"organization_memberships,omitempty"` 	
 }
 
 // APIError represents an error response returnted by the API.
