@@ -16,21 +16,35 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
     client, err := zendesk.NewEnvClient()
     assert.NoError(t, err)
 
-    org, err := RandOrg(client)
+    org1, err := RandOrg(client)
+    assert.NoError(t, err)
+    org2, err := RandOrg(client)
     assert.NoError(t, err)
 
     user, err := RandUser(client)
     assert.NoError(t, err)
     
     // it should create an organization membership
-    orgMembership := zendesk.OrganizationMembership{
+    orgMembership1 := zendesk.OrganizationMembership{
         UserID:         user.ID,
-        OrganizationID: org.ID,
+        OrganizationID: org1.ID,
     }
 
-    created, err := client.CreateOrganizationMembership(&orgMembership)
+    created1, err := client.CreateOrganizationMembership(&orgMembership1)
     assert.NoError(t, err)
-    assert.NotNil(t, created.ID)
-    assert.Equal(t, *user.ID, *created.UserID)
-    assert.Equal(t, *org.ID, *created.OrganizationID)
+    assert.NotNil(t, created1.ID)
+    assert.Equal(t, *user.ID, *created1.UserID)
+    assert.Equal(t, *org1.ID, *created1.OrganizationID)
+
+    orgMembership2 := zendesk.OrganizationMembership{
+        UserID:         user.ID,
+        OrganizationID: org2.ID,
+    }
+    _, err = client.CreateOrganizationMembership(&orgMembership2) 
+    assert.NoError(t, err)
+
+    // it should return organization memberships for specific user
+    found, err := client.ListOrganizationMembershipsByUserID(*user.ID)
+    assert.NoError(t, err)
+    assert.Len(t, found, 2)
 }

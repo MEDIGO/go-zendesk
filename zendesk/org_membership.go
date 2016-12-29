@@ -2,6 +2,7 @@ package zendesk
 
 import (
     "time"
+    "fmt"
 )
 
 // OrganizationMembership represents a Zendesk association between an org and a user.
@@ -25,4 +26,10 @@ func (c *client) CreateOrganizationMembership(orgMembership *OrganizationMembers
     out := new(APIPayload)
     err := c.post("/api/v2/organization_memberships.json", in, out)
     return out.OrganizationMembership, err
+}
+
+func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error) {
+    out := new(APIPayload)
+    err := c.get(fmt.Sprintf("/api/v2/users/%d/organization_memberships.json", id), out)
+    return out.OrganizationMemberships, err
 }
