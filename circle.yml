@@ -7,5 +7,7 @@ dependencies:
     - cd $HOME/.go_project/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME && go get -t -d -v ./...
 
 test:
+    pre:
+        - touch .env
     override:
         - cd $HOME/.go_project/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME && make
