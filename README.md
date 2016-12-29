@@ -35,20 +35,22 @@ $ make lint
 
 ### Testing
 
-The project contains integration tests that uses the Zendesk API. To execute them we must have access to a it and configure the following environment variables:
+The project contains integration tests that uses the Zendesk API. To execute them you must provide the following values in a `.env` file:
 
-| Name             | Description
-| ---------------- | ----------------------------------
-| ZENDESK_DOMAIN   | The Zendesk API domain.
-| ZENDESK_USERNAME | The Zendesk API username.
-| ZENDESK_PASSWORD | The Zendesk API password.
-
+```
+ZENDESK_DOMAIN=<your-zendesk-domain>
+ZENDESK_USERNAME=<your-zendesk-api-username>
+ZENDESK_PASSWORD=<your-zendesk-api-password>
+```
 
 Then, to run the test, use the command:
 
 ```
 $ make test
 ```
+
+Please note that integration tests will create and alter entities in the configured Zendesk instance.
+You most likely want to run them against a [Zendesk Sandbox](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) instance.
 
 ## Copyright and license
 
