@@ -35,6 +35,7 @@ func RandTicket(client zendesk.Client, user *zendesk.User) (*zendesk.Ticket, err
 		Subject:     zendesk.String("My printer is on fire!"),
 		Description: zendesk.String("The smoke is very colorful."),
 		RequesterID: user.ID,
+		Type:	     zendesk.String("problem"),
 		Tags:        []string{"test"},
 	}
 
