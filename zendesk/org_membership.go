@@ -28,6 +28,9 @@ func (c *client) CreateOrganizationMembership(orgMembership *OrganizationMembers
     return out.OrganizationMembership, err
 }
 
+// ListOrganizationMembershipsByUserID returns all organization memberships for a specific user
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#list-memberships
 func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error) {
     out := new(APIPayload)
     err := c.get(fmt.Sprintf("/api/v2/users/%d/organization_memberships.json", id), out)
