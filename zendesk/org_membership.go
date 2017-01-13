@@ -24,7 +24,18 @@ type OrganizationMembership struct {
 func (c *client) CreateOrganizationMembership(orgMembership *OrganizationMembership) (*OrganizationMembership, error) {
     in := &APIPayload{OrganizationMembership: orgMembership}
     out := new(APIPayload)
-    err := c.post("/api/v2/organization_memberships.json", in, out)
+
+    // return existing membership if there is one
+    memberships, err := c.ListOrganizationMembershipsByUserID(*orgMembership.UserID)
+    if err != nil {
+        for _, membership := range memberships {
+            if *membership.OrganizationID == *orgMembership.OrganizationID {
+                return &membership, nil
+            }
+        }
+    }
+
+    err = c.post("/api/v2/organization_memberships.json", in, out)
     return out.OrganizationMembership, err
 }
 
