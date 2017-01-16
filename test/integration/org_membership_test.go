@@ -43,6 +43,13 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
     _, err = client.CreateOrganizationMembership(&orgMembership2) 
     assert.NoError(t, err)
 
+    // it should not throw error if existing membership is attempted to be created
+    replayMembership, err := client.CreateOrganizationMembership(&orgMembership1) 
+    assert.NoError(t, err)
+    assert.NotNil(t, replayMembership.ID)
+    assert.Equal(t, *created1.UserID, *replayMembership.UserID)
+    assert.Equal(t, *created1.OrganizationID, *replayMembership.OrganizationID)
+
     // it should return organization memberships for specific user
     found, err := client.ListOrganizationMembershipsByUserID(*user.ID)
     assert.NoError(t, err)
