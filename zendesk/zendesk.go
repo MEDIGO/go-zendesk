@@ -36,6 +36,7 @@ type Client interface {
 	UpdateOrganization(int64, *Organization) (*Organization, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
+	UpsertUser(*User) (*User, error)
 	UploadFile(string, io.Reader) (*Upload, error)
 }
 
