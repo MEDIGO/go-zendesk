@@ -56,7 +56,7 @@ func TestUserCRUD(t *testing.T) {
 		Name:  zendesk.String(RandString(16)),
 		Email: updated.Email,
 	}
-	upserted, err := client.UpsertUser(&input)
+	upserted, err := client.CreateOrUpdateUser(&input)
 	assert.NoError(t, err)
 	assert.NotNil(t, *upserted.ID)
 	assert.Equal(t, *upserted.ID, *updated.ID)

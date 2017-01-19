@@ -75,10 +75,10 @@ func (c *client) CreateUser(user *User) (*User, error) {
 	return out.User, err
 }
 
-// UpsertUser creates or updates a user.
+// CreateOrUpdateUser creates or updates a user.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#create-or-update-user
-func (c *client) UpsertUser(user *User) (*User, error) {
+func (c *client) CreateOrUpdateUser(user *User) (*User, error) {
 	in := &APIPayload{User: user}
 	out := new(APIPayload)
 	err := c.post("/api/v2/users/create_or_update.json", in, out)
