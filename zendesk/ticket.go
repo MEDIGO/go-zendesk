@@ -2,6 +2,8 @@ package zendesk
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -32,6 +34,9 @@ type Ticket struct {
 	CreatedAt       *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt       *time.Time     `json:"updated_at,omitempty"`
 	CustomFields    []CustomField  `json:"custom_fields,omitempty"`
+
+	AdditionalTags []string `json:"additional_tags,omitempty"`
+	RemoveTags     []string `json:"remove_tags,omitempty"`
 }
 
 type CustomField struct {
@@ -59,11 +64,23 @@ func (c *client) UpdateTicket(id int64, ticket *Ticket) (*Ticket, error) {
 	return out.Ticket, err
 }
 
-func (c *client) UpdateManyTickets(tickets []Ticket) ([]Ticket, error) {
+func (c *client) BatchUpdateManyTickets(tickets []Ticket) error {
 	in := &APIPayload{Tickets: tickets}
 	out := new(APIPayload)
 	err := c.put("/api/v2/tickets/update_many.json", in, out)
-	return out.Tickets, err
+	return err
+}
+
+func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
+	parsed := []string{}
+	for _, id := range ids {
+		parsed = append(parsed, strconv.FormatInt(id, 10))
+	}
+
+	in := &APIPayload{Ticket: ticket}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/tickets/update_many.json?ids=%s", strings.Join(parsed, ",")), in, out)
+	return err
 }
 
 func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {

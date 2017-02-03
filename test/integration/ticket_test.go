@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/MEDIGO/go-zendesk/zendesk"
 )
@@ -51,7 +52,7 @@ func TestTicketCRUD(t *testing.T) {
 	assert.Equal(t, created.ID, requested[0].ID)
 }
 
-func TestUpdateManyTickets(t *testing.T) {
+func TestBatchUpdateManyTickets(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode.")
 	}
@@ -69,12 +70,33 @@ func TestUpdateManyTickets(t *testing.T) {
 		{ID: two.ID, Status: zendesk.String("solved")},
 	}
 
-	updated, err := client.UpdateManyTickets(updates)
+	err = client.BatchUpdateManyTickets(updates)
+	assert.NoError(t, err)
+}
+
+func TestBulkUpdateManyTickets(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := zendesk.NewEnvClient()
 	assert.NoError(t, err)
 
-	for _, ticket := range updated {
-		assert.Equal(t, "solved", *ticket.Status)
-	}
+	user, err := RandUser(client)
+
+	one, err := RandTicket(client, user)
+	require.NoError(t, err)
+	assert.True(t, contains(one.Tags, "test"))
+
+	two, err := RandTicket(client, user)
+	require.NoError(t, err)
+	assert.True(t, contains(two.Tags, "test"))
+
+	err = client.BulkUpdateManyTickets([]int64{*one.ID, *two.ID}, &zendesk.Ticket{
+		AdditionalTags: []string{"a_new_tag"},
+		RemoveTags:     []string{"test"},
+	})
+	require.NoError(t, err)
 }
 
 func TestListTicketIncidents(t *testing.T) {
@@ -114,4 +136,13 @@ func TestListTicketIncidents(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Len(t, incidents, 2)
+}
+
+func contains(l []string, s string) bool {
+	for _, e := range l {
+		if e == s {
+			return true
+		}
+	}
+	return false
 }
