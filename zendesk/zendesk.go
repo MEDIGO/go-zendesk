@@ -13,14 +13,17 @@ import (
 
 // Client describes a client for the Zendesk Core API.
 type Client interface {
+	BatchUpdateManyTickets([]Ticket) error
+	BulkUpdateManyTickets([]int64, *Ticket) error
 	CreateOrganization(*Organization) (*Organization, error)
+	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
+	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
-	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
 	ListLocales() ([]Locale, error)
+	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
-	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketFields() ([]TicketField, error)
@@ -32,11 +35,9 @@ type Client interface {
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)
-	UpdateManyTickets([]Ticket) ([]Ticket, error)
 	UpdateOrganization(int64, *Organization) (*Organization, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
-	CreateOrUpdateUser(*User) (*User, error)
 	UploadFile(string, io.Reader) (*Upload, error)
 }
 
