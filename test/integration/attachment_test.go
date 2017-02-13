@@ -20,15 +20,21 @@ func TestAttachmentCRUD(t *testing.T) {
 	file, info := open(t, "ball.jpeg")
 
 	// assert that it can upload a file
-	upload, err := client.UploadFile("ball.jpeg", file)
+	upload1, err := client.UploadFile("ball.jpeg", nil, file)
 	require.NoError(t, err)
-	require.NotNil(t, upload.Token)
-	require.NotNil(t, upload.Attachment)
-	require.NotNil(t, upload.Attachment.ID)
-	require.Equal(t, "ball.jpeg", *upload.Attachment.FileName)
-	require.Equal(t, info.Size(), *upload.Attachment.Size)
+	require.NotNil(t, upload1.Token)
+	require.NotNil(t, upload1.Attachment)
+	require.NotNil(t, upload1.Attachment.ID)
+	require.Equal(t, "ball.jpeg", *upload1.Attachment.FileName)
+	require.Equal(t, info.Size(), *upload1.Attachment.Size)
 
-	// assert that it can attach an upload to a ticket
+	file, info = open(t, "ball.jpeg") // reopen file
+
+	// assert that it can reuse the upload token
+	upload2, err := client.UploadFile("ball.jpeg", upload1.Token, file)
+	require.NoError(t, err)
+
+	// assert that it can attach the uploads to a ticket
 	user, err := RandUser(client)
 	assert.NoError(t, err)
 
@@ -38,7 +44,7 @@ func TestAttachmentCRUD(t *testing.T) {
 		Subject:     zendesk.String("My printer is on fire!"),
 		Comment: &zendesk.TicketComment{
 			Body:    zendesk.String("The smoke is very colorful."),
-			Uploads: []string{*upload.Token},
+			Uploads: []string{*upload1.Token},
 		},
 	})
 	require.NoError(t, err)
@@ -49,9 +55,9 @@ func TestAttachmentCRUD(t *testing.T) {
 	require.NotNil(t, comments[0].Attachments)
 
 	attachments := comments[0].Attachments
-	require.Len(t, attachments, 1)
-	require.Equal(t, *upload.Attachment.ID, *attachments[0].ID)
-
+	require.Len(t, attachments, 2)
+	require.Equal(t, *upload1.Attachment.ID, *attachments[0].ID)
+	require.Equal(t, *upload2.Attachment.ID, *attachments[1].ID)
 }
 
 func open(t *testing.T, name string) (*os.File, os.FileInfo) {

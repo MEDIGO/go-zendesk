@@ -38,10 +38,11 @@ func (c *client) ShowAttachment(id int64) (*Attachment, error) {
 // UploadFile uploads a file as a io.Reader.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/attachments#uploading-files
-func (c *client) UploadFile(filename string, filecontent io.Reader) (*Upload, error) {
+func (c *client) UploadFile(filename string, token *string, filecontent io.Reader) (*Upload, error) {
 	params, err := query.Values(struct {
-		Filename string `url:"filename"`
-	}{filename})
+		Filename string  `url:"filename"`
+		Token    *string `url:"token,omitempty"`
+	}{filename, token})
 	if err != nil {
 		return nil, err
 	}
