@@ -115,8 +115,9 @@ func (c *client) do(method, endpoint string, in, out interface{}) error {
 		return err
 	}
 
-	headers := map[string]string{
-		"Content-Type": "application/json",
+	headers := map[string]string{}
+	if in != nil {
+		headers["Content-Type"] = "application/json"
 	}
 
 	res, err := c.request(method, endpoint, headers, bytes.NewReader(payload))
