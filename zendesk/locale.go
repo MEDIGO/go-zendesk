@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// Locale represents an Zendesk translation locale.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/locales
 type Locale struct {
 	ID        *int64     `json:"id,omitempty"`
 	URL       *string    `json:"url,omitempty"`

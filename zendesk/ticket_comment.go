@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// TicketComment represents a comment on a Ticket.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/ticket_comments
 type TicketComment struct {
 	ID          *int64       `json:"id,omitempty"`
 	Type        *string      `json:"type,omitempty"`

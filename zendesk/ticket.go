@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+// Ticket represents a Zendesk Ticket.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets
 type Ticket struct {
 	ID              *int64         `json:"id,omitempty"`
 	URL             *string        `json:"url,omitempty"`
