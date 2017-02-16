@@ -45,7 +45,7 @@ $ make lint
 
 ### Testing
 
-The project contains integration tests that uses the Zendesk API. To execute them the following environment variables must be available:
+The project contains integration tests that uses the Zendesk API. To execute them you must provide the following values in a `.env` file:
 
 ```
 ZENDESK_DOMAIN=<your-zendesk-domain>
