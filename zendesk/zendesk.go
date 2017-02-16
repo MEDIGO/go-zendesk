@@ -110,7 +110,7 @@ func (c *client) request(method, endpoint string, headers map[string]string, bod
 }
 
 func (c *client) do(method, endpoint string, in, out interface{}) error {
-	body, err := marshall(in)
+	payload, err := marshall(in)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (c *client) do(method, endpoint string, in, out interface{}) error {
 		"Content-Type": "application/json",
 	}
 
-	res, err := c.request(method, endpoint, headers, body)
+	res, err := c.request(method, endpoint, headers, bytes.NewReader(payload))
 	if err != nil {
 		return err
 	}
@@ -136,7 +136,7 @@ func (c *client) do(method, endpoint string, in, out interface{}) error {
 
 		time.Sleep(time.Duration(after) * time.Second)
 
-		res, err = c.request(method, endpoint, headers, body)
+		res, err = c.request(method, endpoint, headers, bytes.NewReader(payload))
 		if err != nil {
 			return err
 		}
@@ -158,17 +158,12 @@ func (c *client) put(endpoint string, in, out interface{}) error {
 	return c.do("PUT", endpoint, in, out)
 }
 
-func marshall(in interface{}) (io.Reader, error) {
+func marshall(in interface{}) ([]byte, error) {
 	if in == nil {
 		return nil, nil
 	}
 
-	payload, err := json.Marshal(in)
-	if err != nil {
-		return nil, err
-	}
-
-	return bytes.NewBuffer(payload), nil
+	return json.Marshal(in)
 }
 
 func unmarshall(res *http.Response, out interface{}) error {
