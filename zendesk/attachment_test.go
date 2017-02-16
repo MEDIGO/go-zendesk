@@ -1,10 +1,9 @@
-package integration
+package zendesk
 
 import (
 	"os"
 	"testing"
 
-	"github.com/MEDIGO/go-zendesk/zendesk"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,7 +13,7 @@ func TestAttachmentCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
 	file, info := open(t, "ball.jpeg")
@@ -35,15 +34,15 @@ func TestAttachmentCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	// assert that it can attach the uploads to a ticket
-	user, err := RandUser(client)
+	user, err := randUser(client)
 	assert.NoError(t, err)
 
-	ticket, err := client.CreateTicket(&zendesk.Ticket{
+	ticket, err := client.CreateTicket(&Ticket{
 		RequesterID: user.ID,
 		Tags:        []string{"test"},
-		Subject:     zendesk.String("My printer is on fire!"),
-		Comment: &zendesk.TicketComment{
-			Body:    zendesk.String("The smoke is very colorful."),
+		Subject:     String("My printer is on fire!"),
+		Comment: &TicketComment{
+			Body:    String("The smoke is very colorful."),
 			Uploads: []string{*upload1.Token},
 		},
 	})

@@ -1,11 +1,9 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestLocaleCRUD(t *testing.T) {
@@ -13,7 +11,7 @@ func TestLocaleCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
 	listed, err := client.ListLocales()

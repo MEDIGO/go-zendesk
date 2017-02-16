@@ -1,11 +1,9 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestUserCRUD(t *testing.T) {
@@ -13,12 +11,12 @@ func TestUserCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	input := zendesk.User{
-		Name:  zendesk.String(RandString(16)),
-		Email: zendesk.String(RandString(16) + "@example.com"),
+	input := User{
+		Name:  String(randString(16)),
+		Email: String(randString(16) + "@example.com"),
 	}
 
 	created, err := client.CreateUser(&input)
@@ -33,8 +31,8 @@ func TestUserCRUD(t *testing.T) {
 	assert.Equal(t, *input.Name, *found.Name)
 	assert.Equal(t, *input.Email, *found.Email)
 
-	input = zendesk.User{
-		Name: zendesk.String("Testy Testacular"),
+	input = User{
+		Name: String("Testy Testacular"),
 	}
 
 	updated, err := client.UpdateUser(*created.ID, &input)
@@ -46,14 +44,14 @@ func TestUserCRUD(t *testing.T) {
 	assert.Len(t, searched, 1)
 	assert.Equal(t, updated, &searched[0])
 
-	other, err := client.CreateUser(&zendesk.User{
-		Name:  zendesk.String(RandString(16)),
-		Email: zendesk.String(RandString(16) + "@example.com"),
+	other, err := client.CreateUser(&User{
+		Name:  String(randString(16)),
+		Email: String(randString(16) + "@example.com"),
 	})
 	assert.NoError(t, err)
 
-	input = zendesk.User{
-		Name:  zendesk.String(RandString(16)),
+	input = User{
+		Name:  String(randString(16)),
 		Email: updated.Email,
 	}
 	upserted, err := client.CreateOrUpdateUser(&input)
@@ -72,17 +70,17 @@ func TestListOrganizationUsers(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	org, err := client.CreateOrganization(&zendesk.Organization{
-		Name: zendesk.String("test-" + RandString(7)),
+	org, err := client.CreateOrganization(&Organization{
+		Name: String("test-" + randString(7)),
 	})
 	assert.NoError(t, err)
 
-	user, err := client.CreateUser(&zendesk.User{
-		Name:           zendesk.String(RandString(16)),
-		Email:          zendesk.String(RandString(16) + "@example.com"),
+	user, err := client.CreateUser(&User{
+		Name:           String(randString(16)),
+		Email:          String(randString(16) + "@example.com"),
 		OrganizationID: org.ID,
 	})
 	assert.NoError(t, err)

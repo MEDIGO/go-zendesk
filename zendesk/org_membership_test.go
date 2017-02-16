@@ -1,11 +1,9 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestOrganizationMembershipCRUD(t *testing.T) {
@@ -13,19 +11,19 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	org1, err := RandOrg(client)
+	org1, err := randOrg(client)
 	assert.NoError(t, err)
-	org2, err := RandOrg(client)
+	org2, err := randOrg(client)
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 	assert.NoError(t, err)
 
 	// it should create an organization membership
-	orgMembership1 := zendesk.OrganizationMembership{
+	orgMembership1 := OrganizationMembership{
 		UserID:         user.ID,
 		OrganizationID: org1.ID,
 	}
@@ -36,7 +34,7 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
 	assert.Equal(t, *user.ID, *created1.UserID)
 	assert.Equal(t, *org1.ID, *created1.OrganizationID)
 
-	orgMembership2 := zendesk.OrganizationMembership{
+	orgMembership2 := OrganizationMembership{
 		UserID:         user.ID,
 		OrganizationID: org2.ID,
 	}

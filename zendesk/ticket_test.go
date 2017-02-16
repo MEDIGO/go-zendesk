@@ -1,12 +1,10 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestTicketCRUD(t *testing.T) {
@@ -14,15 +12,15 @@ func TestTicketCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 	assert.NoError(t, err)
 
-	ticket := &zendesk.Ticket{
-		Subject:     zendesk.String("My printer is on fire!"),
-		Description: zendesk.String("The smoke is very colorful."),
+	ticket := &Ticket{
+		Subject:     String("My printer is on fire!"),
+		Description: String("The smoke is very colorful."),
 		RequesterID: user.ID,
 		Tags:        []string{"test"},
 	}
@@ -38,8 +36,8 @@ func TestTicketCRUD(t *testing.T) {
 	assert.Equal(t, created.RequesterID, found.RequesterID)
 	assert.Equal(t, created.Tags, found.Tags)
 
-	input := zendesk.Ticket{
-		Status: zendesk.String("solved"),
+	input := Ticket{
+		Status: String("solved"),
 	}
 
 	updated, err := client.UpdateTicket(*created.ID, &input)
@@ -57,17 +55,17 @@ func TestBatchUpdateManyTickets(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 
-	one, err := RandTicket(client, user)
-	two, err := RandTicket(client, user)
+	one, err := randTicket(client, user)
+	two, err := randTicket(client, user)
 
-	updates := []zendesk.Ticket{
-		{ID: one.ID, Status: zendesk.String("solved")},
-		{ID: two.ID, Status: zendesk.String("solved")},
+	updates := []Ticket{
+		{ID: one.ID, Status: String("solved")},
+		{ID: two.ID, Status: String("solved")},
 	}
 
 	err = client.BatchUpdateManyTickets(updates)
@@ -79,20 +77,20 @@ func TestBulkUpdateManyTickets(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 
-	one, err := RandTicket(client, user)
+	one, err := randTicket(client, user)
 	require.NoError(t, err)
 	assert.True(t, contains(one.Tags, "test"))
 
-	two, err := RandTicket(client, user)
+	two, err := randTicket(client, user)
 	require.NoError(t, err)
 	assert.True(t, contains(two.Tags, "test"))
 
-	err = client.BulkUpdateManyTickets([]int64{*one.ID, *two.ID}, &zendesk.Ticket{
+	err = client.BulkUpdateManyTickets([]int64{*one.ID, *two.ID}, &Ticket{
 		AdditionalTags: []string{"a_new_tag"},
 		RemoveTags:     []string{"test"},
 	})
@@ -104,26 +102,26 @@ func TestListTicketIncidents(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 	assert.NoError(t, err)
 
-	ticket, err := RandTicket(client, user)
+	ticket, err := randTicket(client, user)
 	assert.NoError(t, err)
 
-	incident1 := &zendesk.Ticket{
-		Description: zendesk.String("Fire alarm trigger"),
+	incident1 := &Ticket{
+		Description: String("Fire alarm trigger"),
 		RequesterID: user.ID,
-		Type:        zendesk.String("incident"),
+		Type:        String("incident"),
 		ProblemID:   ticket.ID,
 	}
 
-	incident2 := &zendesk.Ticket{
-		Description: zendesk.String("Building evacuation"),
+	incident2 := &Ticket{
+		Description: String("Building evacuation"),
 		RequesterID: user.ID,
-		Type:        zendesk.String("incident"),
+		Type:        String("incident"),
 		ProblemID:   ticket.ID,
 	}
 

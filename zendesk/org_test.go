@@ -1,11 +1,9 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/MEDIGO/go-zendesk/zendesk"
 )
 
 func TestOrganizationCRUD(t *testing.T) {
@@ -13,11 +11,11 @@ func TestOrganizationCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	input := zendesk.Organization{
-		Name: zendesk.String("test-" + RandString(7)),
+	input := Organization{
+		Name: String("test-" + randString(7)),
 	}
 
 	// it should create an organization
@@ -32,11 +30,11 @@ func TestOrganizationCRUD(t *testing.T) {
 	assert.Equal(t, *created.ID, *found.ID)
 	assert.Equal(t, *input.Name, *found.Name)
 
-	name := "test-" + RandString(7)
+	name := "test-" + randString(7)
 
 	// it should update an organization
-	updated, err := client.UpdateOrganization(*found.ID, &zendesk.Organization{
-		Name: zendesk.String(name),
+	updated, err := client.UpdateOrganization(*found.ID, &Organization{
+		Name: String(name),
 	})
 
 	assert.NoError(t, err)
@@ -48,17 +46,17 @@ func TestOrganizationList(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	_, err = client.CreateOrganization(&zendesk.Organization{Name: zendesk.String("test-" + RandString(7))})
-	_, err = client.CreateOrganization(&zendesk.Organization{Name: zendesk.String("test-" + RandString(7))})
+	_, err = client.CreateOrganization(&Organization{Name: String("test-" + randString(7))})
+	_, err = client.CreateOrganization(&Organization{Name: String("test-" + randString(7))})
 
-	first, err := client.ListOrganizations(&zendesk.ListOptions{PerPage: 1})
+	first, err := client.ListOrganizations(&ListOptions{PerPage: 1})
 	assert.NoError(t, err)
 	assert.Len(t, first, 1)
 
-	second, err := client.ListOrganizations(&zendesk.ListOptions{Page: 2, PerPage: 1})
+	second, err := client.ListOrganizations(&ListOptions{Page: 2, PerPage: 1})
 	assert.NoError(t, err)
 	assert.Len(t, first, 1)
 

@@ -1,9 +1,8 @@
-package integration
+package zendesk
 
 import (
 	"testing"
 
-	"github.com/MEDIGO/go-zendesk/zendesk"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,13 +11,13 @@ func TestTicketCommentCRUD(t *testing.T) {
 		t.Skip("skipping integration test in short mode.")
 	}
 
-	client, err := zendesk.NewEnvClient()
+	client, err := NewEnvClient()
 	assert.NoError(t, err)
 
-	user, err := RandUser(client)
+	user, err := randUser(client)
 	assert.NoError(t, err)
 
-	ticket, err := RandTicket(client, user)
+	ticket, err := randTicket(client, user)
 	assert.NoError(t, err)
 
 	// assert that a newly created ticket has a comment
@@ -27,9 +26,9 @@ func TestTicketCommentCRUD(t *testing.T) {
 	assert.Len(t, listed, 1)
 
 	// assert that we can add a comment to a ticket
-	in := zendesk.Ticket{
-		Comment: &zendesk.TicketComment{
-			Body: zendesk.String("The smoke is very colorful."),
+	in := Ticket{
+		Comment: &TicketComment{
+			Body: String("The smoke is very colorful."),
 		},
 	}
 
