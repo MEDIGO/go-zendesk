@@ -3,7 +3,6 @@ package zendesk
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -13,10 +12,9 @@ func TestTicketCRUD(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	user, err := randUser(client)
-	assert.NoError(t, err)
+	user := randUser(t, client)
 
 	ticket := &Ticket{
 		Subject:     String("My printer is on fire!"),
@@ -26,28 +24,28 @@ func TestTicketCRUD(t *testing.T) {
 	}
 
 	created, err := client.CreateTicket(ticket)
-	assert.NoError(t, err)
-	assert.NotNil(t, created.ID)
-	assert.Len(t, ticket.Tags, 1)
+	require.NoError(t, err)
+	require.NotNil(t, created.ID)
+	require.Len(t, ticket.Tags, 1)
 
 	found, err := client.ShowTicket(*created.ID)
-	assert.NoError(t, err)
-	assert.Equal(t, created.Subject, found.Subject)
-	assert.Equal(t, created.RequesterID, found.RequesterID)
-	assert.Equal(t, created.Tags, found.Tags)
+	require.NoError(t, err)
+	require.Equal(t, created.Subject, found.Subject)
+	require.Equal(t, created.RequesterID, found.RequesterID)
+	require.Equal(t, created.Tags, found.Tags)
 
 	input := Ticket{
 		Status: String("solved"),
 	}
 
 	updated, err := client.UpdateTicket(*created.ID, &input)
-	assert.NoError(t, err)
-	assert.Equal(t, input.Status, updated.Status)
+	require.NoError(t, err)
+	require.Equal(t, input.Status, updated.Status)
 
 	requested, err := client.ListRequestedTickets(*user.ID)
-	assert.NoError(t, err)
-	assert.Len(t, requested, 1)
-	assert.Equal(t, created.ID, requested[0].ID)
+	require.NoError(t, err)
+	require.Len(t, requested, 1)
+	require.Equal(t, created.ID, requested[0].ID)
 }
 
 func TestBatchUpdateManyTickets(t *testing.T) {
@@ -56,12 +54,12 @@ func TestBatchUpdateManyTickets(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	user, err := randUser(client)
+	user := randUser(t, client)
 
-	one, err := randTicket(client, user)
-	two, err := randTicket(client, user)
+	one := randTicket(t, client, user)
+	two := randTicket(t, client, user)
 
 	updates := []Ticket{
 		{ID: one.ID, Status: String("solved")},
@@ -69,7 +67,7 @@ func TestBatchUpdateManyTickets(t *testing.T) {
 	}
 
 	err = client.BatchUpdateManyTickets(updates)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestBulkUpdateManyTickets(t *testing.T) {
@@ -78,17 +76,15 @@ func TestBulkUpdateManyTickets(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
-
-	user, err := randUser(client)
-
-	one, err := randTicket(client, user)
 	require.NoError(t, err)
-	assert.True(t, contains(one.Tags, "test"))
 
-	two, err := randTicket(client, user)
-	require.NoError(t, err)
-	assert.True(t, contains(two.Tags, "test"))
+	user := randUser(t, client)
+
+	one := randTicket(t, client, user)
+	require.True(t, contains(one.Tags, "test"))
+
+	two := randTicket(t, client, user)
+	require.True(t, contains(two.Tags, "test"))
 
 	err = client.BulkUpdateManyTickets([]int64{*one.ID, *two.ID}, &Ticket{
 		AdditionalTags: []string{"a_new_tag"},
@@ -103,13 +99,10 @@ func TestListTicketIncidents(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
-	user, err := randUser(client)
-	assert.NoError(t, err)
-
-	ticket, err := randTicket(client, user)
-	assert.NoError(t, err)
+	user := randUser(t, client)
+	ticket := randTicket(t, client, user)
 
 	incident1 := &Ticket{
 		Description: String("Fire alarm trigger"),
@@ -126,14 +119,14 @@ func TestListTicketIncidents(t *testing.T) {
 	}
 
 	_, err = client.CreateTicket(incident1)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	_, err = client.CreateTicket(incident2)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	incidents, err := client.ListTicketIncidents(*ticket.ID)
 
-	assert.NoError(t, err)
-	assert.Len(t, incidents, 2)
+	require.NoError(t, err)
+	require.Len(t, incidents, 2)
 }
 
 func contains(l []string, s string) bool {

@@ -3,7 +3,7 @@ package zendesk
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUserCRUD(t *testing.T) {
@@ -12,7 +12,7 @@ func TestUserCRUD(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	input := User{
 		Name:  String(randString(16)),
@@ -20,49 +20,49 @@ func TestUserCRUD(t *testing.T) {
 	}
 
 	created, err := client.CreateUser(&input)
-	assert.NoError(t, err)
-	assert.NotNil(t, created.ID)
-	assert.Equal(t, *input.Name, *created.Name)
-	assert.Equal(t, *input.Email, *created.Email)
+	require.NoError(t, err)
+	require.NotNil(t, created.ID)
+	require.Equal(t, *input.Name, *created.Name)
+	require.Equal(t, *input.Email, *created.Email)
 
 	found, err := client.ShowUser(*created.ID)
-	assert.NoError(t, err)
-	assert.Equal(t, *created.ID, *found.ID)
-	assert.Equal(t, *input.Name, *found.Name)
-	assert.Equal(t, *input.Email, *found.Email)
+	require.NoError(t, err)
+	require.Equal(t, *created.ID, *found.ID)
+	require.Equal(t, *input.Name, *found.Name)
+	require.Equal(t, *input.Email, *found.Email)
 
 	input = User{
 		Name: String("Testy Testacular"),
 	}
 
 	updated, err := client.UpdateUser(*created.ID, &input)
-	assert.NoError(t, err)
-	assert.Equal(t, input.Name, updated.Name)
+	require.NoError(t, err)
+	require.Equal(t, input.Name, updated.Name)
 
 	searched, err := client.SearchUsers(*updated.Email)
-	assert.NoError(t, err)
-	assert.Len(t, searched, 1)
-	assert.Equal(t, updated, &searched[0])
+	require.NoError(t, err)
+	require.Len(t, searched, 1)
+	require.Equal(t, updated, &searched[0])
 
 	other, err := client.CreateUser(&User{
 		Name:  String(randString(16)),
 		Email: String(randString(16) + "@example.com"),
 	})
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	input = User{
 		Name:  String(randString(16)),
 		Email: updated.Email,
 	}
 	upserted, err := client.CreateOrUpdateUser(&input)
-	assert.NoError(t, err)
-	assert.NotNil(t, *upserted.ID)
-	assert.Equal(t, *upserted.ID, *updated.ID)
-	assert.NotEqual(t, *upserted.Name, *updated.Name)
+	require.NoError(t, err)
+	require.NotNil(t, *upserted.ID)
+	require.Equal(t, *upserted.ID, *updated.ID)
+	require.NotEqual(t, *upserted.Name, *updated.Name)
 
 	many, err := client.ShowManyUsers([]int64{*created.ID, *other.ID})
-	assert.NoError(t, err)
-	assert.Len(t, many, 2)
+	require.NoError(t, err)
+	require.Len(t, many, 2)
 }
 
 func TestListOrganizationUsers(t *testing.T) {
@@ -71,22 +71,22 @@ func TestListOrganizationUsers(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	org, err := client.CreateOrganization(&Organization{
 		Name: String("test-" + randString(7)),
 	})
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	user, err := client.CreateUser(&User{
 		Name:           String(randString(16)),
 		Email:          String(randString(16) + "@example.com"),
 		OrganizationID: org.ID,
 	})
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	found, err := client.ListOrganizationUsers(*org.ID, nil)
-	assert.NoError(t, err)
-	assert.Len(t, found, 1)
-	assert.Equal(t, *user.ID, *found[0].ID)
+	require.NoError(t, err)
+	require.Len(t, found, 1)
+	require.Equal(t, *user.ID, *found[0].ID)
 }

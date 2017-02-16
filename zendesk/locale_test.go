@@ -3,7 +3,7 @@ package zendesk
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLocaleCRUD(t *testing.T) {
@@ -12,17 +12,17 @@ func TestLocaleCRUD(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	listed, err := client.ListLocales()
-	assert.NoError(t, err)
-	assert.NotEmpty(t, listed)
+	require.NoError(t, err)
+	require.NotEmpty(t, listed)
 
 	found, err := client.ShowLocale(1)
-	assert.NoError(t, err)
-	assert.Equal(t, int64(1), *found.ID)
+	require.NoError(t, err)
+	require.Equal(t, int64(1), *found.ID)
 
 	found, err = client.ShowLocaleByCode("en-US")
-	assert.NoError(t, err)
-	assert.Equal(t, "en-US", *found.Locale)
+	require.NoError(t, err)
+	require.Equal(t, "en-US", *found.Locale)
 }

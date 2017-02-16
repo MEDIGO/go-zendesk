@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -14,7 +13,7 @@ func TestAttachmentCRUD(t *testing.T) {
 	}
 
 	client, err := NewEnvClient()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	file, info := open(t, "ball.jpeg")
 
@@ -34,8 +33,7 @@ func TestAttachmentCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	// assert that it can attach the uploads to a ticket
-	user, err := randUser(client)
-	assert.NoError(t, err)
+	user := randUser(t, client)
 
 	ticket, err := client.CreateTicket(&Ticket{
 		RequesterID: user.ID,
