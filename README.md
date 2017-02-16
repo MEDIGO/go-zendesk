@@ -1,10 +1,12 @@
 # Go-Zendesk
 
 [![CircleCI](https://circleci.com/gh/MEDIGO/go-zendesk.svg?style=shield)](https://circleci.com/gh/MEDIGO/go-zendesk)
+[![GoDoc](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk?status.png)](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk)
 
 Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
 
 This library is used internally at MEDIGO and the API resources are being implemented as needed.
+
 **It's work in progress. Use with caution.**
 
 ## Usage
@@ -12,14 +14,22 @@ This library is used internally at MEDIGO and the API resources are being implem
 ```go
 package main
 
-import "github.com/MEDIGO/go-zendesk/zendesk"
+import (
+  "log"
+
+  "github.com/MEDIGO/go-zendesk/zendesk"
+)
 
 func main() {
-  zendeskcl, err := zendesk.NewClient("your-zendesk-domain", "your-username", "your-api-password")
-
-  if err != nil {
-    // I can now use zendesk client...
-  }
+    client, err := zendesk.NewClient("domain", "username", "password")
+    if err != nil {
+        log.Fatal(err)
+    }
+    ticket, err := client.ShowTicket(1)
+    if err != nil {
+        log.Fatal(err)
+    }
+    log.Printf("Requester ID is: %d", *ticket.RequesterID)
 }
 ```
 
@@ -35,7 +45,7 @@ $ make lint
 
 ### Testing
 
-The project contains integration tests that uses the Zendesk API. To execute them you must provide the following values in a `.env` file:
+The project contains integration tests that uses the Zendesk API. To execute them the following environment variables must be available:
 
 ```
 ZENDESK_DOMAIN=<your-zendesk-domain>
@@ -54,4 +64,4 @@ You most likely want to run them against a [Zendesk Sandbox](https://support.zen
 
 ## Copyright and license
 
-Copyright © 2016 MEDIGO GmbH. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.
+Copyright © 2017 MEDIGO GmbH. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.
