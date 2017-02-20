@@ -95,6 +95,15 @@ func (c *client) UpdateUser(id int64, user *User) (*User, error) {
 	return out.User, err
 }
 
+// DeleteUser deletes an User.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#delete-user
+func (c *client) DeleteUser(id int64) (*User, error) {
+	out := new(APIPayload)
+	err := c.delete(fmt.Sprintf("/api/v2/users/%d.json", id), out)
+	return out.User, err
+}
+
 // ListUsersOptions specifies the optional parameters for the list users methods.
 type ListUsersOptions struct {
 	ListOptions

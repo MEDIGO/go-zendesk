@@ -22,6 +22,9 @@ type Client interface {
 	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
+	DeleteOrganization(int64) error
+	DeleteTicket(int64) error
+	DeleteUser(int64) (*User, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
@@ -157,6 +160,10 @@ func (c *client) post(endpoint string, in, out interface{}) error {
 
 func (c *client) put(endpoint string, in, out interface{}) error {
 	return c.do("PUT", endpoint, in, out)
+}
+
+func (c *client) delete(endpoint string, out interface{}) error {
+	return c.do("DELETE", endpoint, nil, out)
 }
 
 func marshall(in interface{}) ([]byte, error) {

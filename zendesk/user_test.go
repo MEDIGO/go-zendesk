@@ -63,6 +63,12 @@ func TestUserCRUD(t *testing.T) {
 	many, err := client.ShowManyUsers([]int64{*created.ID, *other.ID})
 	require.NoError(t, err)
 	require.Len(t, many, 2)
+
+	_, err = client.DeleteUser(*created.ID)
+	require.NoError(t, err)
+
+	_, err = client.DeleteUser(*other.ID)
+	require.NoError(t, err)
 }
 
 func TestListOrganizationUsers(t *testing.T) {

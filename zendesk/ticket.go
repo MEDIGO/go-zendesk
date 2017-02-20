@@ -99,3 +99,10 @@ func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 
 	return out.Tickets, err
 }
+
+// DeleteTickets deletes a Ticket.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket
+func (c *client) DeleteTicket(id int64) error {
+	return c.delete(fmt.Sprintf("/api/v2/tickets/%d.json", id), nil)
+}

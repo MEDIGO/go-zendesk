@@ -34,6 +34,7 @@ func TestAttachmentCRUD(t *testing.T) {
 
 	// assert that it can attach the uploads to a ticket
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	ticket, err := client.CreateTicket(&Ticket{
 		RequesterID: user.ID,

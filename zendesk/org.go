@@ -68,3 +68,10 @@ func (c *client) ListOrganizations(opts *ListOptions) ([]Organization, error) {
 	err = c.get("/api/v2/organizations.json?"+params.Encode(), out)
 	return out.Organizations, err
 }
+
+// DeleteOrganization deletes an Organization.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#delete-organization
+func (c *client) DeleteOrganization(id int64) error {
+	return c.delete(fmt.Sprintf("/api/v2/organizations/%d.json", id), nil)
+}

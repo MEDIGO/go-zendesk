@@ -15,9 +15,13 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	org1 := randOrg(t, client)
+	defer client.DeleteOrganization(*org1.ID)
+
 	org2 := randOrg(t, client)
+	defer client.DeleteOrganization(*org2.ID)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	// it should create an organization membership
 	orgMembership1 := OrganizationMembership{

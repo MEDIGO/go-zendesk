@@ -39,6 +39,9 @@ func TestOrganizationCRUD(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Equal(t, name, *updated.Name)
+
+	err = client.DeleteOrganization(*created.ID)
+	require.NoError(t, err)
 }
 
 func TestOrganizationList(t *testing.T) {

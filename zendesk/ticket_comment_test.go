@@ -15,8 +15,10 @@ func TestTicketCommentCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	ticket := randTicket(t, client, user)
+	defer client.DeleteTicket(*ticket.ID)
 
 	// assert that a newly created ticket has a comment
 	listed, err := client.ListTicketComments(*ticket.ID)

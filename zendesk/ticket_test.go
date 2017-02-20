@@ -15,6 +15,7 @@ func TestTicketCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	ticket := &Ticket{
 		Subject:     String("My printer is on fire!"),
@@ -46,6 +47,9 @@ func TestTicketCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, requested, 1)
 	require.Equal(t, created.ID, requested[0].ID)
+
+	err = client.DeleteTicket(*created.ID)
+	require.NoError(t, err)
 }
 
 func TestBatchUpdateManyTickets(t *testing.T) {
@@ -57,9 +61,13 @@ func TestBatchUpdateManyTickets(t *testing.T) {
 	require.NoError(t, err)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	one := randTicket(t, client, user)
+	defer client.DeleteTicket(*one.ID)
+
 	two := randTicket(t, client, user)
+	defer client.DeleteTicket(*two.ID)
 
 	updates := []Ticket{
 		{ID: one.ID, Status: String("solved")},
@@ -79,11 +87,15 @@ func TestBulkUpdateManyTickets(t *testing.T) {
 	require.NoError(t, err)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
 
 	one := randTicket(t, client, user)
-	require.True(t, contains(one.Tags, "test"))
+	defer client.DeleteTicket(*one.ID)
 
 	two := randTicket(t, client, user)
+	defer client.DeleteTicket(*two.ID)
+
+	require.True(t, contains(one.Tags, "test"))
 	require.True(t, contains(two.Tags, "test"))
 
 	err = client.BulkUpdateManyTickets([]int64{*one.ID, *two.ID}, &Ticket{
@@ -102,7 +114,10 @@ func TestListTicketIncidents(t *testing.T) {
 	require.NoError(t, err)
 
 	user := randUser(t, client)
+	defer client.DeleteUser(*user.ID)
+
 	ticket := randTicket(t, client, user)
+	defer client.DeleteTicket(*ticket.ID)
 
 	incident1 := &Ticket{
 		Description: String("Fire alarm trigger"),
