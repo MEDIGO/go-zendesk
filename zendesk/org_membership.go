@@ -24,19 +24,7 @@ type OrganizationMembership struct {
 func (c *client) CreateOrganizationMembership(orgMembership *OrganizationMembership) (*OrganizationMembership, error) {
 	in := &APIPayload{OrganizationMembership: orgMembership}
 	out := new(APIPayload)
-
-	// return existing membership if there is one
-	memberships, err := c.ListOrganizationMembershipsByUserID(*orgMembership.UserID)
-
-	if err == nil && memberships != nil {
-		for _, membership := range memberships {
-			if *membership.OrganizationID == *orgMembership.OrganizationID {
-				return &membership, nil
-			}
-		}
-	}
-
-	err = c.post("/api/v2/organization_memberships.json", in, out)
+	err := c.post("/api/v2/organization_memberships.json", in, out)
 	return out.OrganizationMembership, err
 }
 
@@ -47,4 +35,13 @@ func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMe
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d/organization_memberships.json", id), out)
 	return out.OrganizationMemberships, err
+}
+
+// DeleteOrganizationMembership removes an organization membership
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership
+func (c *client) DeleteOrganizationMembership(userId, orgId int64) error {
+	out := new(APIPayload)
+	err := c.delete(fmt.Sprintf("/api/v2/users/%d/organization_memberships/%d.json", userId, orgId), out)
+	return err
 }

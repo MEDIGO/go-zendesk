@@ -39,18 +39,27 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
 		UserID:         user.ID,
 		OrganizationID: org2.ID,
 	}
-	_, err = client.CreateOrganizationMembership(&orgMembership2)
+	created2, err := client.CreateOrganizationMembership(&orgMembership2)
 	require.NoError(t, err)
 
-	// it should not throw error if existing membership is attempted to be created
-	replayMembership, err := client.CreateOrganizationMembership(&orgMembership1)
-	require.NoError(t, err)
-	require.NotNil(t, replayMembership.ID)
-	require.Equal(t, *created1.UserID, *replayMembership.UserID)
-	require.Equal(t, *created1.OrganizationID, *replayMembership.OrganizationID)
-
-	// it should return organization memberships for specific user
+	// it should return all organization memberships for specific user
 	found, err := client.ListOrganizationMembershipsByUserID(*user.ID)
 	require.NoError(t, err)
 	require.Len(t, found, 2)
+	found1 := isExistingMembership(*created1.UserID, *created1.OrganizationID, found)
+	require.Equal(t, found1, true)
+	found2 := isExistingMembership(*created2.UserID, *created2.OrganizationID, found)
+	require.Equal(t, found2, true)
+}
+
+func isExistingMembership(userId, orgId int64, memberships []OrganizationMembership) bool {
+	if memberships != nil {
+		for _, membership := range memberships {
+			if *membership.OrganizationID == orgId && *membership.UserID == userId {
+				return true
+			}
+		}
+	}
+
+	return false
 }
