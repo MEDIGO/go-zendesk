@@ -50,6 +50,13 @@ func TestOrganizationMembershipCRUD(t *testing.T) {
 	require.Equal(t, found1, true)
 	found2 := isExistingMembership(*created2.UserID, *created2.OrganizationID, found)
 	require.Equal(t, found2, true)
+
+	// it should delete an organization membership
+	err = client.DeleteOrganizationMembershipByID(*created1.ID)
+	require.NoError(t, err)
+	found, err = client.ListOrganizationMembershipsByUserID(*user.ID)
+	require.NoError(t, err)
+	require.Len(t, found, 1)
 }
 
 func isExistingMembership(userId, orgId int64, memberships []OrganizationMembership) bool {

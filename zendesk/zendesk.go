@@ -25,6 +25,7 @@ type Client interface {
 	DeleteOrganization(int64) error
 	DeleteTicket(int64) error
 	DeleteUser(int64) (*User, error)
+	DeleteOrganizationMembershipByID(int64) error
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
