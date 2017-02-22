@@ -40,8 +40,7 @@ func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMe
 // DeleteOrganizationMembership removes an organization membership
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership
-func (c *client) DeleteOrganizationMembership(userId, orgId int64) error {
-	out := new(APIPayload)
-	err := c.delete(fmt.Sprintf("/api/v2/users/%d/organization_memberships/%d.json", userId, orgId), out)
+func (c *client) DeleteOrganizationMembershipByID(id int64) error {
+	err := c.delete(fmt.Sprintf("/api/v2/organization_memberships/%d.json", id), nil)
 	return err
 }
