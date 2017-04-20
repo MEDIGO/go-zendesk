@@ -23,6 +23,7 @@ type Ticket struct {
 	Status          *string        `json:"status,omitempty"`
 	Recipient       *string        `json:"recipient,omitempty"`
 	RequesterID     *int64         `json:"requester_id,omitempty"`
+	Requester       *User          `json:"requester,omitempty"`
 	SubmitterID     *int64         `json:"submitter_id,omitempty"`
 	AssigneeID      *int64         `json:"assignee_id,omitempty"`
 	OrganizationID  *int64         `json:"organization_id,omitempty"`
