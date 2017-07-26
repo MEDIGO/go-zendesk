@@ -134,3 +134,13 @@ func (c *client) SearchUsers(query string) ([]User, error) {
 	err := c.get("/api/v2/users/search.json?query="+query, out)
 	return out.Users, err
 }
+
+// AddUserTags adds a tag to a user
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tags#add-tags
+func (c *client) AddUserTags(id int64, tags []string) ([]string, error) {
+	in := &APIPayload{Tags: tags}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/users/%d/tags.json", id), in, out)
+	return out.Tags, err
+}

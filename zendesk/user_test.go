@@ -64,6 +64,10 @@ func TestUserCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, many, 2)
 
+	tags, err := client.AddUserTags(*created.ID, []string{"a", "b"})
+	require.NoError(t, err)
+	require.Len(t, tags, 2)
+
 	_, err = client.DeleteUser(*created.ID)
 	require.NoError(t, err)
 
