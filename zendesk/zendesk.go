@@ -15,6 +15,7 @@ import (
 
 // Client describes a client for the Zendesk Core API.
 type Client interface {
+	AddUserTags(int64, []string) ([]string, error)
 	BatchUpdateManyTickets([]Ticket) error
 	BulkUpdateManyTickets([]int64, *Ticket) error
 	CreateOrganization(*Organization) (*Organization, error)
@@ -202,16 +203,17 @@ type APIPayload struct {
 	Locale                  *Locale                  `json:"locale,omitempty"`
 	Locales                 []Locale                 `json:"locales,omitempty"`
 	Organization            *Organization            `json:"organization,omitempty"`
+	OrganizationMembership  *OrganizationMembership  `json:"organization_membership,omitempty"`
+	OrganizationMemberships []OrganizationMembership `json:"organization_memberships,omitempty"`
 	Organizations           []Organization           `json:"organizations,omitempty"`
+	Tags                    []string                 `json:"tags,omitempty"`
 	Ticket                  *Ticket                  `json:"ticket,omitempty"`
+	TicketField             *TicketField             `json:"ticket_field,omitempty"`
+	TicketFields            []TicketField            `json:"ticket_fields,omitempty"`
 	Tickets                 []Ticket                 `json:"tickets,omitempty"`
 	Upload                  *Upload                  `json:"upload,omitempty"`
 	User                    *User                    `json:"user,omitempty"`
 	Users                   []User                   `json:"users,omitempty"`
-	TicketField             *TicketField             `json:"ticket_field,omitempty"`
-	TicketFields            []TicketField            `json:"ticket_fields,omitempty"`
-	OrganizationMembership  *OrganizationMembership  `json:"organization_membership,omitempty"`
-	OrganizationMemberships []OrganizationMembership `json:"organization_memberships,omitempty"`
 }
 
 // APIError represents an error response returnted by the API.
