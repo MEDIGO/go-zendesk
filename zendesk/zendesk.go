@@ -48,6 +48,10 @@ type Client interface {
 	UploadFile(string, *string, io.Reader) (*Upload, error)
 }
 
+type RequestFunction func(*http.Request) (*http.Response, error)
+
+type MiddlewareFunction func(RequestFunction) RequestFunction
+
 type client struct {
 	username string
 	password string
@@ -55,10 +59,11 @@ type client struct {
 	client    *http.Client
 	baseURL   *url.URL
 	userAgent string
+	reqFunc   RequestFunction
 }
 
 // NewEnvClient creates a new Client configured via environment variables.
-func NewEnvClient() (Client, error) {
+func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
 	domain := os.Getenv("ZENDESK_DOMAIN")
 	if domain == "" {
 		return nil, errors.New("ZENDESK_DOMAIN not found")
@@ -74,22 +79,31 @@ func NewEnvClient() (Client, error) {
 		return nil, errors.New("ZENDESK_PASSWORD not found")
 	}
 
-	return NewClient(domain, username, password)
+	return NewClient(domain, username, password, middleware...)
 }
 
 // NewClient creates a new Client.
-func NewClient(domain, username, password string) (Client, error) {
+func NewClient(domain, username, password string, middleware ...MiddlewareFunction) (Client, error) {
 	baseURL, err := url.Parse(fmt.Sprintf("https://%s.zendesk.com", domain))
 	if err != nil {
 		return nil, err
 	}
 
-	return &client{
+	c := &client{
 		baseURL:   baseURL,
 		userAgent: "Go-Zendesk",
 		username:  username,
 		password:  password,
-	}, err
+		reqFunc:   http.DefaultClient.Do,
+	}
+
+	if middleware != nil {
+		for i := len(middleware) - 1; i >= 0; i-- {
+			c.reqFunc = middleware[i](c.reqFunc)
+		}
+	}
+
+	return c, nil
 }
 
 func (c *client) request(method, endpoint string, headers map[string]string, body io.Reader) (*http.Response, error) {
@@ -111,7 +125,7 @@ func (c *client) request(method, endpoint string, headers map[string]string, bod
 		req.Header.Set(key, value)
 	}
 
-	return http.DefaultClient.Do(req)
+	return c.reqFunc(req)
 }
 
 func (c *client) do(method, endpoint string, in, out interface{}) error {
