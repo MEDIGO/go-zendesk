@@ -1,3 +1,5 @@
+// Package zendesk provides a client for using the Zendesk Core API.
+
 package zendesk
 
 import (
@@ -63,6 +65,9 @@ type client struct {
 }
 
 // NewEnvClient creates a new Client configured via environment variables.
+//
+// Three environment variables are required: ZENDESK_DOMAIN, ZENDESK_USERNAME and ZENDESK_PASSWORD
+// they will provide parameters to the NewClient function
 func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
 	domain := os.Getenv("ZENDESK_DOMAIN")
 	if domain == "" {
@@ -83,6 +88,9 @@ func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
 }
 
 // NewClient creates a new Client.
+//
+// You can use either a user email/password combination or an API token.
+// For the latter, append /token to the email and use the API token as a password
 func NewClient(domain, username, password string, middleware ...MiddlewareFunction) (Client, error) {
 	baseURL, err := url.Parse(fmt.Sprintf("https://%s.zendesk.com", domain))
 	if err != nil {

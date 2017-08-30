@@ -33,6 +33,9 @@ func main() {
 }
 ```
 
+Find the complete API on https://godoc.org/github.com/MEDIGO/go-zendesk/zendesk#NewClient
+
+
 ## Development
 
 ### Linting
@@ -49,7 +52,7 @@ The project contains integration tests that uses the Zendesk API. To execute the
 
 ```
 ZENDESK_DOMAIN=<your-zendesk-domain>
-ZENDESK_USERNAME=<your-zendesk-api-username>
+ZENDESK_USERNAME=<your-zendesk-api-email>
 ZENDESK_PASSWORD=<your-zendesk-api-password>
 ```
 
