@@ -38,6 +38,7 @@ type Ticket struct {
 	CreatedAt       *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt       *time.Time     `json:"updated_at,omitempty"`
 	CustomFields    []CustomField  `json:"custom_fields,omitempty"`
+	BrandID         *int64         `json:"brand_id,omitempty"`
 
 	AdditionalTags []string `json:"additional_tags,omitempty"`
 	RemoveTags     []string `json:"remove_tags,omitempty"`
