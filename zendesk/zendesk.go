@@ -20,15 +20,18 @@ type Client interface {
 	AddUserTags(int64, []string) ([]string, error)
 	BatchUpdateManyTickets([]Ticket) error
 	BulkUpdateManyTickets([]int64, *Ticket) error
+	CreateIdentity(int64, *UserIdentity) (*UserIdentity, error)
 	CreateOrganization(*Organization) (*Organization, error)
 	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
 	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
+	DeleteIdentity(int64, int64) error
 	DeleteOrganization(int64) error
 	DeleteTicket(int64) error
 	DeleteUser(int64) (*User, error)
 	DeleteOrganizationMembershipByID(int64) error
+	ListIdentities(int64) ([]UserIdentity, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
@@ -38,12 +41,14 @@ type Client interface {
 	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
 	SearchUsers(string) ([]User, error)
+	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)
 	ShowManyUsers([]int64) ([]User, error)
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)
+	UpdateIdentity(int64, int64, *UserIdentity) (*UserIdentity, error)
 	UpdateOrganization(int64, *Organization) (*Organization, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
@@ -222,6 +227,8 @@ type APIPayload struct {
 	Attachments             []Attachment             `json:"attachments"`
 	Comment                 *TicketComment           `json:"comment,omitempty"`
 	Comments                []TicketComment          `json:"comments,omitempty"`
+	Identity                *UserIdentity            `json:"identity,omitempty"`
+	Identities              []UserIdentity           `json:"identities,omitempty"`
 	Locale                  *Locale                  `json:"locale,omitempty"`
 	Locales                 []Locale                 `json:"locales,omitempty"`
 	Organization            *Organization            `json:"organization,omitempty"`
