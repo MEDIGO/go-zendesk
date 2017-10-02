@@ -67,6 +67,15 @@ func TestIdentityCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, len(found), 2)
 
+	// fail creation if type is wrong
+	malformed := UserIdentity{
+		Type:  String("address"), // not a valid type
+		Value: String(randString(16) + "@example.com"),
+	}
+
+	_, err = client.CreateIdentity(*user.ID, &malformed)
+	require.Error(t, err)
+
 	// delete user identity
 	err = client.DeleteIdentity(*user.ID, *created.ID)
 	require.NoError(t, err)

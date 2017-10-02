@@ -3,6 +3,8 @@ package zendesk
 import (
 	"fmt"
 	"time"
+
+	"github.com/go-ozzo/ozzo-validation"
 )
 
 // UserIdentity represents a Zendesk user identity.
@@ -20,6 +22,13 @@ type UserIdentity struct {
 	UpdatedAt          *time.Time `json:"updated_at,omitempty"`
 	UndeliverableCount *int64     `json:"undeliverable_count,omitempty"`
 	DeliverableState   *string    `json:"deliverable_state,omitempty"`
+}
+
+func (u *UserIdentity) Validate() error {
+	return validation.ValidateStruct(u,
+		// Type can take values within "email", "twitter", "facebook", "google"
+		validation.Field(&u.Type, validation.In("email", "twitter", "facebook", "google")),
+	)
 }
 
 // ListIdentities lists all user identities.
@@ -44,9 +53,14 @@ func (c *client) ShowIdentity(userID, id int64) (*UserIdentity, error) {
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/user_identities#create-identity
 func (c *client) CreateIdentity(userID int64, identity *UserIdentity) (*UserIdentity, error) {
+	err := identity.Validate()
+	if err != nil {
+		return nil, err
+	}
+
 	in := &APIPayload{Identity: identity}
 	out := new(APIPayload)
-	err := c.post(fmt.Sprintf("/api/v2/users/%d/identities.json", userID), in, out)
+	err = c.post(fmt.Sprintf("/api/v2/users/%d/identities.json", userID), in, out)
 	return out.Identity, err
 }
 
