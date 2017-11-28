@@ -17,6 +17,8 @@ import (
 
 // Client describes a client for the Zendesk Core API.
 type Client interface {
+	WithHeader(name, value string) Client
+
 	AddUserTags(int64, []string) ([]string, error)
 	BatchUpdateManyTickets([]Ticket) error
 	BulkUpdateManyTickets([]int64, *Ticket) error
@@ -67,6 +69,7 @@ type client struct {
 	baseURL   *url.URL
 	userAgent string
 	reqFunc   RequestFunction
+	headers   map[string]string
 }
 
 // NewEnvClient creates a new Client configured via environment variables.
@@ -113,6 +116,7 @@ func NewURLClient(endpoint, username, password string, middleware ...MiddlewareF
 		username:  username,
 		password:  password,
 		reqFunc:   http.DefaultClient.Do,
+		headers:   make(map[string]string),
 	}
 
 	if middleware != nil {
@@ -122,6 +126,21 @@ func NewURLClient(endpoint, username, password string, middleware ...MiddlewareF
 	}
 
 	return c, nil
+}
+
+// WithHeader returns an updated client that sends the provided header
+// with each subsequent request.
+func (c *client) WithHeader(name, value string) Client {
+	newClient := *c
+	newClient.headers = make(map[string]string)
+
+	for k, v := range c.headers {
+		newClient.headers[k] = v
+	}
+
+	newClient.headers[name] = value
+
+	return &newClient
 }
 
 func (c *client) request(method, endpoint string, headers map[string]string, body io.Reader) (*http.Response, error) {
@@ -138,6 +157,10 @@ func (c *client) request(method, endpoint string, headers map[string]string, bod
 
 	req.SetBasicAuth(c.username, c.password)
 	req.Header.Set("User-Agent", c.userAgent)
+
+	for key, value := range c.headers {
+		req.Header.Set(key, value)
+	}
 
 	for key, value := range headers {
 		req.Header.Set(key, value)
