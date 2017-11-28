@@ -97,7 +97,12 @@ func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
 // You can use either a user email/password combination or an API token.
 // For the latter, append /token to the email and use the API token as a password
 func NewClient(domain, username, password string, middleware ...MiddlewareFunction) (Client, error) {
-	baseURL, err := url.Parse(fmt.Sprintf("https://%s.zendesk.com", domain))
+	return NewURLClient(fmt.Sprintf("https://%s.zendesk.com", domain), username, password, middleware...)
+}
+
+// NewURLClient is like NewClient but accepts an explicit end point instead of a Zendesk domain.
+func NewURLClient(endpoint, username, password string, middleware ...MiddlewareFunction) (Client, error) {
+	baseURL, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, err
 	}
