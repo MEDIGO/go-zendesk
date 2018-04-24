@@ -42,6 +42,7 @@ type Client interface {
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
+	ListUsers(*ListUsersOptions) ([]User, error)
 	SearchUsers(string) ([]User, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowLocale(int64) (*Locale, error)

@@ -100,3 +100,22 @@ func TestListOrganizationUsers(t *testing.T) {
 	require.Len(t, found, 1)
 	require.Equal(t, *user.ID, *found[0].ID)
 }
+
+func TestListUsers(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := NewEnvClient()
+	require.NoError(t, err)
+
+	_, err = client.CreateUser(&User{
+		Name:  String(randString(16)),
+		Email: String(randString(16) + "@example.com"),
+	})
+	require.NoError(t, err)
+
+	found, err := client.ListUsers(nil)
+	require.NoError(t, err)
+	require.NotEqual(t, 0, len(found))
+}

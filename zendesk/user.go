@@ -126,6 +126,20 @@ func (c *client) ListOrganizationUsers(id int64, opts *ListUsersOptions) ([]User
 	return out.Users, err
 }
 
+// ListUsers list of all users.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#list-users
+func (c *client) ListUsers(opts *ListUsersOptions) ([]User, error) {
+	params, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/users.json?%s", params.Encode()), out)
+	return out.Users, err
+}
+
 // SearchUsers searches users by name or email address.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#search-users
