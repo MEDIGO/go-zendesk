@@ -45,6 +45,7 @@ type Client interface {
 	ListUsers(*ListUsersOptions) ([]User, error)
 	PermanentlyDeleteUser(int64) (*User, error)
 	SearchUsers(string) ([]User, error)
+	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)
@@ -253,26 +254,27 @@ func unmarshall(res *http.Response, out interface{}) error {
 
 // APIPayload represents the payload of an API call.
 type APIPayload struct {
-	Attachment              *Attachment              `json:"attachment"`
-	Attachments             []Attachment             `json:"attachments"`
-	Comment                 *TicketComment           `json:"comment,omitempty"`
-	Comments                []TicketComment          `json:"comments,omitempty"`
-	Identity                *UserIdentity            `json:"identity,omitempty"`
-	Identities              []UserIdentity           `json:"identities,omitempty"`
-	Locale                  *Locale                  `json:"locale,omitempty"`
-	Locales                 []Locale                 `json:"locales,omitempty"`
-	Organization            *Organization            `json:"organization,omitempty"`
-	OrganizationMembership  *OrganizationMembership  `json:"organization_membership,omitempty"`
-	OrganizationMemberships []OrganizationMembership `json:"organization_memberships,omitempty"`
-	Organizations           []Organization           `json:"organizations,omitempty"`
-	Tags                    []string                 `json:"tags,omitempty"`
-	Ticket                  *Ticket                  `json:"ticket,omitempty"`
-	TicketField             *TicketField             `json:"ticket_field,omitempty"`
-	TicketFields            []TicketField            `json:"ticket_fields,omitempty"`
-	Tickets                 []Ticket                 `json:"tickets,omitempty"`
-	Upload                  *Upload                  `json:"upload,omitempty"`
-	User                    *User                    `json:"user,omitempty"`
-	Users                   []User                   `json:"users,omitempty"`
+	Attachment                 *Attachment                `json:"attachment"`
+	Attachments                []Attachment               `json:"attachments"`
+	Comment                    *TicketComment             `json:"comment,omitempty"`
+	Comments                   []TicketComment            `json:"comments,omitempty"`
+	ComplianceDeletionStatuses []ComplianceDeletionStatus `json:"compliance_deletion_statuses,omitempty"`
+	Identity                   *UserIdentity              `json:"identity,omitempty"`
+	Identities                 []UserIdentity             `json:"identities,omitempty"`
+	Locale                     *Locale                    `json:"locale,omitempty"`
+	Locales                    []Locale                   `json:"locales,omitempty"`
+	Organization               *Organization              `json:"organization,omitempty"`
+	OrganizationMembership     *OrganizationMembership    `json:"organization_membership,omitempty"`
+	OrganizationMemberships    []OrganizationMembership   `json:"organization_memberships,omitempty"`
+	Organizations              []Organization             `json:"organizations,omitempty"`
+	Tags                       []string                   `json:"tags,omitempty"`
+	Ticket                     *Ticket                    `json:"ticket,omitempty"`
+	TicketField                *TicketField               `json:"ticket_field,omitempty"`
+	TicketFields               []TicketField              `json:"ticket_fields,omitempty"`
+	Tickets                    []Ticket                   `json:"tickets,omitempty"`
+	Upload                     *Upload                    `json:"upload,omitempty"`
+	User                       *User                      `json:"user,omitempty"`
+	Users                      []User                     `json:"users,omitempty"`
 }
 
 // APIError represents an error response returnted by the API.

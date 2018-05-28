@@ -45,6 +45,19 @@ type User struct {
 	UserFields          map[string]interface{} `json:"user_fields,omitempty"`
 }
 
+// ComplianceDeletionStatus represents a GDPR status
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#show-compliance-deletion-statuses
+type ComplianceDeletionStatus struct {
+	AccountID        *int64     `json:"account_id,omitempty"`
+	Action           *string    `json:"action,omitempty"`
+	Application      *string    `json:"application,omitempty"`
+	AccountSubdomain *string    `json:"account_subdomian,omitempty"`
+	ExecuterID       *int64     `json:"executer_id,omitempty"`
+	CreatedAt        *time.Time `json:"created_at,omitempty"`
+	UserID           *int64     `json:"user_id,omitempty"`
+}
+
 // ShowUser fetches a user by its ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#show-user
@@ -166,4 +179,15 @@ func (c *client) AddUserTags(id int64, tags []string) ([]string, error) {
 	out := new(APIPayload)
 	err := c.put(fmt.Sprintf("/api/v2/users/%d/tags.json", id), in, out)
 	return out.Tags, err
+}
+
+// Show Compliance Deletion Statuses
+//
+// Zendesk Core API docs:https://developer.zendesk.com/rest_api/docs/core/users#show-compliance-deletion-statuses
+func (c *client) ShowComplianceDeletionStatuses(id int64) ([]ComplianceDeletionStatus, error) {
+	out := new(APIPayload)
+	err := c.get(
+		fmt.Sprintf("/api/v2/users/%d/compliance_deletion_statuses.json", id),
+		out)
+	return out.ComplianceDeletionStatuses, err
 }

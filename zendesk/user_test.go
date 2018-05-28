@@ -73,8 +73,16 @@ func TestUserCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, *created.Active)
 
+	statues, err := client.ShowComplianceDeletionStatuses(*created.ID)
+	require.NoError(t, err)
+	require.Zero(t, len(statues))
+
 	_, err = client.PermanentlyDeleteUser(*created.ID)
 	require.NoError(t, err)
+
+	statues, err = client.ShowComplianceDeletionStatuses(*created.ID)
+	require.NoError(t, err)
+	require.NotZero(t, len(statues))
 
 	other, err = client.DeleteUser(*other.ID)
 	require.NoError(t, err)
