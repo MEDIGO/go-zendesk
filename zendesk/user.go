@@ -104,6 +104,15 @@ func (c *client) DeleteUser(id int64) (*User, error) {
 	return out.User, err
 }
 
+// PermanentlyDeleteUser deletes a User and their information. WARNING: unrecoverable - GDPR compliance
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#permanently-delete-user
+func (c *client) PermanentlyDeleteUser(id int64) (*User, error) {
+	out := new(APIPayload)
+	err := c.delete(fmt.Sprintf("/api/v2/deleted_users/%d.json", id), out)
+	return out.User, err
+}
+
 // ListUsersOptions specifies the optional parameters for the list users methods.
 type ListUsersOptions struct {
 	ListOptions

@@ -24,6 +24,7 @@ func TestUserCRUD(t *testing.T) {
 	require.NotNil(t, created.ID)
 	require.Equal(t, *input.Name, *created.Name)
 	require.Equal(t, *input.Email, *created.Email)
+	require.True(t, *created.Active)
 
 	found, err := client.ShowUser(*created.ID)
 	require.NoError(t, err)
@@ -68,11 +69,20 @@ func TestUserCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, tags, 2)
 
-	_, err = client.DeleteUser(*created.ID)
+	created, err = client.DeleteUser(*created.ID)
+	require.NoError(t, err)
+	require.False(t, *created.Active)
+
+	_, err = client.PermanentlyDeleteUser(*created.ID)
 	require.NoError(t, err)
 
-	_, err = client.DeleteUser(*other.ID)
+	other, err = client.DeleteUser(*other.ID)
 	require.NoError(t, err)
+	require.False(t, *other.Active)
+
+	_, err = client.PermanentlyDeleteUser(*other.ID)
+	require.NoError(t, err)
+
 }
 
 func TestListOrganizationUsers(t *testing.T) {
