@@ -20,8 +20,26 @@ type TicketComment struct {
 	Uploads     []string     `json:"uploads,omitempty"`
 }
 
+type RedactedString struct {
+	Text *string `json:"text"`
+}
+
 func (c *client) ListTicketComments(id int64) ([]TicketComment, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/comments.json", id), out)
 	return out.Comments, err
+}
+
+// Redact Comment String removes a string in the comment text
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/ticket_comments#redact-string-in-comment
+func (c *client) RedactCommentString(id, ticketID int64, text string) (*TicketComment, error) {
+	in := &RedactedString{Text: &text}
+	out := new(APIPayload)
+	err := c.put(
+		fmt.Sprintf("/api/v2/tickets/%d/comments/%d/redact.json", ticketID, id),
+		in,
+		out)
+
+	return out.Comment, err
 }
