@@ -50,6 +50,14 @@ func TestTicketCRUD(t *testing.T) {
 
 	err = client.DeleteTicket(*created.ID)
 	require.NoError(t, err)
+
+	job, err := client.PermanentlyDeleteTicket(*created.ID)
+	require.NoError(t, err)
+	require.NotNil(t, job.ID)
+
+	status, err := client.ShowJobStatus(*job.ID)
+	require.NoError(t, err)
+	require.NotNil(t, status.Status)
 }
 
 func TestBatchUpdateManyTickets(t *testing.T) {

@@ -110,3 +110,13 @@ func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 func (c *client) DeleteTicket(id int64) error {
 	return c.delete(fmt.Sprintf("/api/v2/tickets/%d.json", id), nil)
 }
+
+// PermanentlyDeleteTicket purges a ticket with all it's associated data - recordings & attachments
+// WARNING: this task is irreversible; GDPR compliant
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-tickets-permanently
+func (c *client) PermanentlyDeleteTicket(id int64) (*JobStatus, error) {
+	out := new(APIPayload)
+	err := c.delete(fmt.Sprintf("/api/v2/deleted_tickets/%d.json", id), out)
+	return out.JobStatus, err
+}

@@ -43,11 +43,13 @@ type Client interface {
 	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
 	ListUsers(*ListUsersOptions) ([]User, error)
+	PermanentlyDeleteTicket(int64) (*JobStatus, error)
 	PermanentlyDeleteUser(int64) (*User, error)
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
 	SearchUsers(string) ([]User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
+	ShowJobStatus(string) (*JobStatus, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)
 	ShowManyUsers([]int64) ([]User, error)
@@ -262,6 +264,7 @@ type APIPayload struct {
 	ComplianceDeletionStatuses []ComplianceDeletionStatus `json:"compliance_deletion_statuses,omitempty"`
 	Identity                   *UserIdentity              `json:"identity,omitempty"`
 	Identities                 []UserIdentity             `json:"identities,omitempty"`
+	JobStatus                  *JobStatus                 `json:"job_status,omitempty"`
 	Locale                     *Locale                    `json:"locale,omitempty"`
 	Locales                    []Locale                   `json:"locales,omitempty"`
 	Organization               *Organization              `json:"organization,omitempty"`
