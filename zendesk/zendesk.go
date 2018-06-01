@@ -24,6 +24,7 @@ type Client interface {
 	BulkUpdateManyTickets([]int64, *Ticket) error
 	CreateIdentity(int64, *UserIdentity) (*UserIdentity, error)
 	CreateOrganization(*Organization) (*Organization, error)
+	CreateOrUpdateOrganization(*Organization) (*Organization, error)
 	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
 	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
