@@ -23,6 +23,7 @@ type Organization struct {
 	GroupID            *int64                 `json:"group_id,omitempty"`
 	SharedTickets      *bool                  `json:"shared_tickets,omitempty"`
 	SharedComments     *bool                  `json:"shared_comments,omitempty"`
+	Tags               *[]string              `json:"tags,omitempty"`
 	OrganizationFields map[string]interface{} `json:"organization_fields,omitempty"`
 }
 
