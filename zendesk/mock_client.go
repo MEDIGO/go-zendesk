@@ -600,6 +600,29 @@ func (_m *MockClient) RedactCommentString(_a0 int64, _a1 int64, _a2 string) (*Ti
 	return r0, r1
 }
 
+// SearchOrganizationsByExternalID provides a mock function with given fields: _a0
+func (_m *MockClient) SearchOrganizationsByExternalID(_a0 string) ([]Organization, error) {
+	ret := _m.Called(_a0)
+
+	var r0 []Organization
+	if rf, ok := ret.Get(0).(func(string) []Organization); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]Organization)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // SearchUsers provides a mock function with given fields: _a0
 func (_m *MockClient) SearchUsers(_a0 string) ([]User, error) {
 	ret := _m.Called(_a0)

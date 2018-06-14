@@ -86,3 +86,12 @@ func (c *client) ListOrganizations(opts *ListOptions) ([]Organization, error) {
 func (c *client) DeleteOrganization(id int64) error {
 	return c.delete(fmt.Sprintf("/api/v2/organizations/%d.json", id), nil)
 }
+
+// SearchOrganizationsByExternalID search all organizations by the external_id value of an organization
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organizations#search-organizations-by-external-id
+func (c *client) SearchOrganizationsByExternalID(id string) ([]Organization, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/organizations/search.json?external_id=%s", id), out)
+	return out.Organizations, err
+}
