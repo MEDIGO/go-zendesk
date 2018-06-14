@@ -95,7 +95,7 @@ func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
 func (c *client) ListOrganizationTickets(organizationID int64, options *ListOptions) ([]Ticket, error) {
-	params, err := query.Values(opts)
+	params, err := query.Values(options)
 	if err != nil {
 		return nil, err
 	}
