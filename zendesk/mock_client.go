@@ -370,13 +370,13 @@ func (_m *MockClient) ListOrganizationMembershipsByUserID(id int64) ([]Organizat
 	return r0, r1
 }
 
-// ListOrganizationTickets provides a mock function with given fields: int64, options
-func (_m *MockClient) ListOrganizationTickets(int64 *ListOptions, options *ListOptions) ([]Ticket, error) {
-	ret := _m.Called(int64, options)
+// ListOrganizationTickets provides a mock function with given fields: _a0, _a1
+func (_m *MockClient) ListOrganizationTickets(_a0 int64, _a1 *ListOptions) ([]Ticket, error) {
+	ret := _m.Called(_a0, _a1)
 
 	var r0 []Ticket
-	if rf, ok := ret.Get(0).(func(*ListOptions, *ListOptions) []Ticket); ok {
-		r0 = rf(int64, options)
+	if rf, ok := ret.Get(0).(func(int64, *ListOptions) []Ticket); ok {
+		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]Ticket)
@@ -384,8 +384,8 @@ func (_m *MockClient) ListOrganizationTickets(int64 *ListOptions, options *ListO
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*ListOptions, *ListOptions) error); ok {
-		r1 = rf(int64, options)
+	if rf, ok := ret.Get(1).(func(int64, *ListOptions) error); ok {
+		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
 	}

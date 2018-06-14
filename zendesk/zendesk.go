@@ -39,7 +39,7 @@ type Client interface {
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
-	ListOrganizationTickets(int64, options *ListOptions) ([]Ticket, error)
+	ListOrganizationTickets(int64, *ListOptions) ([]Ticket, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketFields() ([]TicketField, error)
