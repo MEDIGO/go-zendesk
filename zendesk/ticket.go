@@ -2,6 +2,7 @@ package zendesk
 
 import (
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
@@ -79,7 +80,7 @@ func (c *client) BatchUpdateManyTickets(tickets []Ticket) error {
 }
 
 func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
-	parsed := []string{}
+	var parsed []string
 	for _, id := range ids {
 		parsed = append(parsed, strconv.FormatInt(id, 10))
 	}
@@ -90,6 +91,23 @@ func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
 	return err
 }
 
+// ListOrganizationTickets list tickets for an organization
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
+func (c *client) ListOrganizationTickets(organizationID int64, options *ListOptions) ([]Ticket, error) {
+	params, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/organizations/%d/tickets.json?%s", organizationID, params.Encode()), out)
+	return out.Tickets, err
+}
+
+// ListRequestedTickets lists tickets that the requesting agent recently viewed in the agent interface,
+// not recently created or updated tickets (unless by the agent recently in the agent interface).
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
 func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d/tickets/requested.json", userID), out)
@@ -97,6 +115,8 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 }
 
 // ListTicketIncidents list all incidents related to the problem
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#listing-ticket-incidents
 func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/incidents.json", problemID), out)
