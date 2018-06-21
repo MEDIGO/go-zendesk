@@ -25,6 +25,7 @@ type Client interface {
 	CreateIdentity(int64, *UserIdentity) (*UserIdentity, error)
 	CreateOrganization(*Organization) (*Organization, error)
 	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
+	CreateOrUpdateOrganization(*Organization) (*Organization, error)
 	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
@@ -38,6 +39,7 @@ type Client interface {
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
 	ListOrganizations(*ListOptions) ([]Organization, error)
 	ListOrganizationUsers(int64, *ListUsersOptions) ([]User, error)
+	ListOrganizationTickets(int64, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketFields() ([]TicketField, error)
@@ -46,6 +48,7 @@ type Client interface {
 	PermanentlyDeleteTicket(int64) (*JobStatus, error)
 	PermanentlyDeleteUser(int64) (*User, error)
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
+	SearchOrganizationsByExternalID(string) ([]Organization, error)
 	SearchUsers(string) ([]User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
@@ -279,6 +282,10 @@ type APIPayload struct {
 	Upload                     *Upload                    `json:"upload,omitempty"`
 	User                       *User                      `json:"user,omitempty"`
 	Users                      []User                     `json:"users,omitempty"`
+	Groups                     []Group                    `json:"groups,omitempty"`
+	NextPage                   string                     `json:"next_page,omitempty"`
+	PreviousPage               string                     `json:"previous_page:omitempty"`
+	Count                      int64                      `json:"count:omitempty"`
 }
 
 // APIError represents an error response returnted by the API.
@@ -346,6 +353,16 @@ func String(s string) *string {
 	return &p
 }
 
+// ListResponse is a holder for the various returns from the list apis
+type ListResponse struct {
+	Tickets      []Ticket
+	Users        []User
+	Groups       []Group
+	NextPage     string
+	PreviousPage string
+	Count        int64
+}
+
 // ListOptions specifies the optional parameters for the list methods that support pagination.
 //
 // Zendesk Core API doscs: https://developer.zendesk.com/rest_api/docs/core/introduction#pagination
@@ -354,4 +371,35 @@ type ListOptions struct {
 	Page int `url:"page,omitempty"`
 	// Sets the number of results to include per page.
 	PerPage int `url:"per_page,omitempty"`
+}
+
+// Side-Loading
+//
+// Zendesk Core API doscs: https://developer.zendesk.com/rest_api/docs/core/side_loading#side-loading
+type SideLoadOptions struct {
+	Include []string
+}
+
+// Allows for side loads to be specified on api requests that support it
+type SideLoad func(*SideLoadOptions)
+
+// IncludeUsers will include a top level array of users
+func IncludeUsers() SideLoad {
+	return func(c *SideLoadOptions) {
+		c.Include = append(c.Include, "users")
+	}
+}
+
+// IncludeGroups will include a top level array of groups
+func IncludeGroups() SideLoad {
+	return func(c *SideLoadOptions) {
+		c.Include = append(c.Include, "groups")
+	}
+}
+
+// IncludeCommentCount will include a top level array of groups
+func IncludeCommentCount() SideLoad {
+	return func(c *SideLoadOptions) {
+		c.Include = append(c.Include, "comment_count")
+	}
 }

@@ -65,6 +65,13 @@ $ make test
 Please note that integration tests will create and alter entities in the configured Zendesk instance.
 You most likely want to run them against a [Zendesk Sandbox](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) instance.
 
+This project also contains a mocked client that was generated with mockery. Within an applications test suite you can inject the mock in place of the zendesk client:
+
+```
+mock := zendesk.MockClient{}
+mock.On("CreateOrUpdateOrganization", *organization).Return(*expectedOrg, expectedError)
+```
+
 ## Copyright and license
 
 Copyright © 2017 MEDIGO GmbH. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.
