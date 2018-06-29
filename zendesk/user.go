@@ -191,3 +191,9 @@ func (c *client) ShowComplianceDeletionStatuses(id int64) ([]ComplianceDeletionS
 		out)
 	return out.ComplianceDeletionStatuses, err
 }
+
+func (c *client) ShowCurrentlyAuthenticatedUser() (*User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/users/me.json"), out)
+	return out.User, err
+}

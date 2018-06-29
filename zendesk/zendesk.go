@@ -1,5 +1,4 @@
 // Package zendesk provides a client for using the Zendesk Core API.
-
 package zendesk
 
 import (
@@ -48,6 +47,7 @@ type Client interface {
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
 	SearchUsers(string) ([]User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
+	ShowCurrentlyAuthenticatedUser() (*User, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowJobStatus(string) (*JobStatus, error)
 	ShowLocale(int64) (*Locale, error)
@@ -160,7 +160,7 @@ func (c *client) request(method, endpoint string, headers map[string]string, bod
 	if err != nil {
 		return nil, err
 	}
-
+	//somehow this is the problem
 	req.SetBasicAuth(c.username, c.password)
 	req.Header.Set("User-Agent", c.userAgent)
 
