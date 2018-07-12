@@ -1,15 +1,11 @@
-include .env
-export $(shell sed 's/=.*//' .env)
+vet: fmt
+	go vet ./...
 
-all: lint test
-.PHONY: all
-
-lint:
-	@echo "Linting source code..."
-	@go vet ./...
-.PHONY: lint
+build: vet
+	go build ./...
 
 test:
-	@echo "Running tests..."
-	@go test -v ./...
-.PHONY: test
+	go test ./... -v -race
+
+fmt:
+	go fmt ./...
