@@ -33,6 +33,7 @@ type Client interface {
 	DeleteTicket(int64) error
 	DeleteUser(int64) (*User, error)
 	DeleteOrganizationMembershipByID(int64) error
+	ListGroups() ([]Group, error)
 	ListIdentities(int64) ([]UserIdentity, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
@@ -46,8 +47,10 @@ type Client interface {
 	PermanentlyDeleteTicket(int64) (*JobStatus, error)
 	PermanentlyDeleteUser(int64) (*User, error)
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
+	SearchGroup(string) (*Group, error)
 	SearchUsers(string) ([]User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
+	ShowGroup(int64) (*Group, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowJobStatus(string) (*JobStatus, error)
 	ShowLocale(int64) (*Locale, error)
@@ -262,6 +265,8 @@ type APIPayload struct {
 	Comment                    *TicketComment             `json:"comment,omitempty"`
 	Comments                   []TicketComment            `json:"comments,omitempty"`
 	ComplianceDeletionStatuses []ComplianceDeletionStatus `json:"compliance_deletion_statuses,omitempty"`
+	Group                      *Group                     `json:"group"`
+	Groups                     []Group                    `json:"groups"`
 	Identity                   *UserIdentity              `json:"identity,omitempty"`
 	Identities                 []UserIdentity             `json:"identities,omitempty"`
 	JobStatus                  *JobStatus                 `json:"job_status,omitempty"`
