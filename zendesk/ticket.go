@@ -26,6 +26,7 @@ type Ticket struct {
 	Requester        *User          `json:"requester,omitempty"`
 	SubmitterID      *int64         `json:"submitter_id,omitempty"`
 	AssigneeID       *int64         `json:"assignee_id,omitempty"`
+	AssigneeEmail    *string        `json:"assignee_email,omitempty"`
 	OrganizationID   *int64         `json:"organization_id,omitempty"`
 	GroupID          *int64         `json:"group_id,omitempty"`
 	CollaboratorIDs  []int64        `json:"collaborator_ids,omitempty"`
