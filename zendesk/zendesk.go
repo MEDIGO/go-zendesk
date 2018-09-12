@@ -20,6 +20,7 @@ type Client interface {
 	WithHeader(name, value string) Client
 
 	AddUserTags(int64, []string) ([]string, error)
+	AutocompleteOrganizations(string) ([]Organization, error)
 	BatchUpdateManyTickets([]Ticket) error
 	BulkUpdateManyTickets([]int64, *Ticket) error
 	CreateIdentity(int64, *UserIdentity) (*UserIdentity, error)
