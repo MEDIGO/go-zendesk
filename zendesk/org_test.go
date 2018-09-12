@@ -65,3 +65,30 @@ func TestOrganizationList(t *testing.T) {
 
 	require.NotEqual(t, *first[0].ID, *second[0].ID)
 }
+
+func TestAutocompleteOrganizations(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := NewEnvClient()
+	require.NoError(t, err)
+
+	organizations, err := client.AutocompleteOrganizations("very fake clinic")
+	require.NoError(t, err)
+	require.Len(t, organizations, 0)
+
+	org1 := randOrg(t, client)
+	defer client.DeleteOrganization(*org1.ID)
+
+	organizations, err = client.AutocompleteOrganizations("very fake clinic")
+	require.NoError(t, err)
+	require.Len(t, organizations, 1)
+
+	org2 := randOrg(t, client)
+	defer client.DeleteOrganization(*org2.ID)
+
+	organizations, err = client.AutocompleteOrganizations("very fake clinic")
+	require.NoError(t, err)
+	require.Len(t, organizations, 2)
+}
