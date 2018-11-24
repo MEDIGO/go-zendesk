@@ -15,8 +15,9 @@ func TestUserCRUD(t *testing.T) {
 	require.NoError(t, err)
 
 	input := User{
-		Name:  String(randString(16)),
-		Email: String(randString(16) + "@example.com"),
+		Name:       String(randString(16)),
+		Email:      String(randString(16) + "@example.com"),
+		ExternalID: String(randString(16)),
 	}
 
 	created, err := client.CreateUser(&input)
@@ -24,6 +25,7 @@ func TestUserCRUD(t *testing.T) {
 	require.NotNil(t, created.ID)
 	require.Equal(t, *input.Name, *created.Name)
 	require.Equal(t, *input.Email, *created.Email)
+	require.Equal(t, *input.ExternalID, *created.ExternalID)
 	require.True(t, *created.Active)
 
 	found, err := client.ShowUser(*created.ID)
@@ -31,6 +33,7 @@ func TestUserCRUD(t *testing.T) {
 	require.Equal(t, *created.ID, *found.ID)
 	require.Equal(t, *input.Name, *found.Name)
 	require.Equal(t, *input.Email, *found.Email)
+	require.Equal(t, *input.ExternalID, *found.ExternalID)
 
 	input = User{
 		Name: String("Testy Testacular"),
@@ -44,6 +47,15 @@ func TestUserCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searched, 1)
 	require.Equal(t, updated, &searched[0])
+
+	found, err = client.SearchUserByExternalID(*updated.ExternalID)
+	require.NoError(t, err)
+	require.Equal(t, updated, found)
+
+	var nilUser *User
+	found, err = client.SearchUserByExternalID("non-existent")
+	require.NoError(t, err)
+	require.Equal(t, nilUser, found)
 
 	other, err := client.CreateUser(&User{
 		Name:  String(randString(16)),
