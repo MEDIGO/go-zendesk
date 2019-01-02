@@ -2,6 +2,7 @@ package zendesk
 
 import (
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
@@ -19,11 +20,11 @@ type Ticket struct {
 	RawSubject       *string        `json:"raw_subject,omitempty"`
 	Description      *string        `json:"description,omitempty"`
 	Comment          *TicketComment `json:"comment,omitempty"`
+	CommentCount     *int64         `json:"comment_count,omitempty"`
 	Priority         *string        `json:"priority,omitempty"`
 	Status           *string        `json:"status,omitempty"`
 	Recipient        *string        `json:"recipient,omitempty"`
 	RequesterID      *int64         `json:"requester_id,omitempty"`
-	Requester        *User          `json:"requester,omitempty"`
 	SubmitterID      *int64         `json:"submitter_id,omitempty"`
 	AssigneeID       *int64         `json:"assignee_id,omitempty"`
 	AssigneeEmail    *string        `json:"assignee_email,omitempty"`
@@ -80,7 +81,7 @@ func (c *client) BatchUpdateManyTickets(tickets []Ticket) error {
 }
 
 func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
-	parsed := []string{}
+	var parsed []string
 	for _, id := range ids {
 		parsed = append(parsed, strconv.FormatInt(id, 10))
 	}
@@ -91,6 +92,40 @@ func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
 	return err
 }
 
+// ListOrganizationTickets list tickets for an organization
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
+func (c *client) ListOrganizationTickets(organizationID int64, options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/organizations/%d/tickets.json?%s", organizationID, params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return &ListResponse{
+		Tickets:      out.Tickets,
+		Users:        out.Users,
+		Groups:       out.Groups,
+		NextPage:     out.NextPage,
+		PreviousPage: out.PreviousPage,
+		Count:        out.Count,
+	}, err
+}
+
+// ListRequestedTickets lists tickets that the requesting agent recently viewed in the agent interface,
+// not recently created or updated tickets (unless by the agent recently in the agent interface).
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
 func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/%d/tickets/requested.json", userID), out)
@@ -98,6 +133,8 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 }
 
 // ListTicketIncidents list all incidents related to the problem
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#listing-ticket-incidents
 func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/incidents.json", problemID), out)
