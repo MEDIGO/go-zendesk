@@ -20,6 +20,7 @@ type Client interface {
 	WithHeader(name, value string) Client
 
 	AddUserTags(int64, []string) ([]string, error)
+	AutocompleteOrganizations(string) ([]Organization, error)
 	BatchUpdateManyTickets([]Ticket) error
 	BulkUpdateManyTickets([]int64, *Ticket) error
 	CreateIdentity(int64, *UserIdentity) (*UserIdentity, error)
@@ -50,6 +51,7 @@ type Client interface {
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
 	SearchOrganizationsByExternalID(string) ([]Organization, error)
 	SearchUsers(string) ([]User, error)
+	SearchUserByExternalID(string) (*User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
 	ShowJobStatus(string) (*JobStatus, error)

@@ -171,6 +171,18 @@ func (c *client) SearchUsers(query string) ([]User, error) {
 	return out.Users, err
 }
 
+// SearchUsersByExternalID searches users by external_id.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#search-users
+func (c *client) SearchUserByExternalID(externalID string) (*User, error) {
+	out := new(APIPayload)
+	err := c.get("/api/v2/users/search.json?external_id="+externalID, out)
+	if len(out.Users) != 1 {
+		return nil, err
+	}
+	return &out.Users[0], err
+}
+
 // AddUserTags adds a tag to a user
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tags#add-tags
