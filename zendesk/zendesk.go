@@ -50,6 +50,7 @@ type Client interface {
 	PermanentlyDeleteUser(int64) (*User, error)
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
 	SearchOrganizationsByExternalID(string) ([]Organization, error)
+	SearchTickets(string, *ListOptions, ...Filters) (*TicketSearchResults, error)
 	SearchUsers(string) ([]User, error)
 	SearchUserByExternalID(string) (*User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
@@ -290,6 +291,14 @@ type APIPayload struct {
 	Count                      *int64                     `json:"count,omitempty"`
 }
 
+// TicketSearchResults represents returned results from the unified search api for type:ticket
+type TicketSearchResults struct {
+	Results      []Ticket `json:"results"`
+	NextPage     *string  `json:"next_page"`
+	PreviousPage *string  `json:"previous_page"`
+	Count        *int64   `json:"count"`
+}
+
 // APIError represents an error response returnted by the API.
 type APIError struct {
 	Response *http.Response
@@ -373,6 +382,10 @@ type ListOptions struct {
 	Page int `url:"page,omitempty"`
 	// Sets the number of results to include per page.
 	PerPage int `url:"per_page,omitempty"`
+	// Sets the field to sort the retrieved results by.
+	SortBy string `url:"sort_by,omitempty"`
+	// Sets the sort order of the results. One of asc or desc.
+	SortOrder string `url:"sort_order,omitempty"`
 }
 
 // Side-Loading
