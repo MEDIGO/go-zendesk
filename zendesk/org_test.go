@@ -44,6 +44,45 @@ func TestOrganizationCRUD(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestOrganizationCreateOrUpdate(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := NewEnvClient()
+	require.NoError(t, err)
+
+	input := Organization{
+		Name: String("test-" + randString(7)),
+	}
+
+	// it should create an organization
+	created, err := client.CreateOrUpdateOrganization(&input)
+	require.NoError(t, err)
+	require.NotNil(t, created.ID)
+	require.Equal(t, *input.Name, *created.Name)
+
+	// it should show an organization
+	found, err := client.ShowOrganization(*created.ID)
+	require.NoError(t, err)
+	require.Equal(t, *created.ID, *found.ID)
+	require.Equal(t, *input.Name, *found.Name)
+
+	name := "test-" + randString(7)
+
+	// it should update an organization
+	updated, err := client.CreateOrUpdateOrganization(&Organization{
+		ID: found.ID,
+		Name: String(name),
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, name, *updated.Name)
+
+	err = client.DeleteOrganization(*created.ID)
+	require.NoError(t, err)
+}
+
 func TestOrganizationList(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode.")

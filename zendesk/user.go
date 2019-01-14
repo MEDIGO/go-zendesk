@@ -67,8 +67,11 @@ func (c *client) ShowUser(id int64) (*User, error) {
 	return out.User, err
 }
 
+// ShowManyUsers accepts a comma-separated list of user ids or external ids.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
 func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
-	sids := []string{}
+	var sids []string
 	for _, id := range ids {
 		sids = append(sids, strconv.FormatInt(id, 10))
 	}
