@@ -1,0 +1,10 @@
+version: 2
+jobs:
+    build:
+        docker:
+          - image: circleci/golang:1
+        steps:
+            - checkout
+            - run: go get -v -t -d ./...
+            - run: touch .env
+            - run: make
