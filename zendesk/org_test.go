@@ -113,7 +113,7 @@ func TestAutocompleteOrganizations(t *testing.T) {
 	client, err := NewEnvClient()
 	require.NoError(t, err)
 
-	organizations, err := client.AutocompleteOrganizations(randString(7) + "very fake clinic")
+	organizations, err := client.AutocompleteOrganizations("very fake clinic")
 	require.NoError(t, err)
 	require.Len(t, organizations, 0)
 
