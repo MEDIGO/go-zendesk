@@ -38,7 +38,7 @@ func TestTicketCRUD(t *testing.T) {
 	require.Equal(t, created.Tags, found.Tags)
 
 	input := Ticket{
-		Status: String("solved"),
+		Status:                  String("solved"),
 		AdditionalCollaborators: []interface{}{"email3@example.com"},
 	}
 
@@ -62,6 +62,26 @@ func TestTicketCRUD(t *testing.T) {
 	status, err := client.ShowJobStatus(*job.ID)
 	require.NoError(t, err)
 	require.NotNil(t, status.Status)
+
+	ticketReq := &Ticket{
+		Subject:       String("My printer is on fire!"),
+		Description:   String("The smoke is very colorful."),
+		Tags:          []string{"test"},
+		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: "NAME", Email: "email2@example.com"}},
+		Requester:     &Requester{Email: "email5@example.com", Name: "NAME2"},
+	}
+
+	createdReq, err := client.CreateTicket(ticketReq)
+	require.NoError(t, err)
+	require.NotNil(t, createdReq.ID)
+
+	err = client.DeleteTicket(*createdReq.ID)
+	require.NoError(t, err)
+
+	jobReq, err := client.PermanentlyDeleteTicket(*createdReq.ID)
+	require.NoError(t, err)
+	require.NotNil(t, jobReq.ID)
+
 }
 
 func TestBatchUpdateManyTickets(t *testing.T) {

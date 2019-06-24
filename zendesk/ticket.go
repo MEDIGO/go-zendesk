@@ -25,6 +25,7 @@ type Ticket struct {
 	Status                  *string        `json:"status,omitempty"`
 	Recipient               *string        `json:"recipient,omitempty"`
 	RequesterID             *int64         `json:"requester_id,omitempty"`
+	Requester               *Requester     `json:"requester,omitempty"`
 	SubmitterID             *int64         `json:"submitter_id,omitempty"`
 	AssigneeID              *int64         `json:"assignee_id,omitempty"`
 	AssigneeEmail           *string        `json:"assignee_email,omitempty"`
@@ -58,6 +59,12 @@ type CustomField struct {
 type Collaborator struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
+}
+
+type Requester struct {
+	LocaleID *int   `json:"locale_id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
 }
 
 func (c *client) ShowTicket(id int64) (*Ticket, error) {
