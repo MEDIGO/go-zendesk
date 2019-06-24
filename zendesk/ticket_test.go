@@ -18,16 +18,18 @@ func TestTicketCRUD(t *testing.T) {
 	defer client.DeleteUser(*user.ID)
 
 	ticket := &Ticket{
-		Subject:     String("My printer is on fire!"),
-		Description: String("The smoke is very colorful."),
-		RequesterID: user.ID,
-		Tags:        []string{"test"},
+		Subject:       String("My printer is on fire!"),
+		Description:   String("The smoke is very colorful."),
+		RequesterID:   user.ID,
+		Tags:          []string{"test"},
+		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: "NAME", Email: "email2@example.com"}},
 	}
 
 	created, err := client.CreateTicket(ticket)
 	require.NoError(t, err)
 	require.NotNil(t, created.ID)
-	require.Len(t, ticket.Tags, 1)
+	require.Len(t, created.Tags, 1)
+	require.Len(t, created.CollaboratorIDs, 2)
 
 	found, err := client.ShowTicket(*created.ID)
 	require.NoError(t, err)
@@ -37,11 +39,13 @@ func TestTicketCRUD(t *testing.T) {
 
 	input := Ticket{
 		Status: String("solved"),
+		AdditionalCollaborators: []interface{}{"email3@example.com"},
 	}
 
 	updated, err := client.UpdateTicket(*created.ID, &input)
 	require.NoError(t, err)
 	require.Equal(t, input.Status, updated.Status)
+	require.Len(t, updated.CollaboratorIDs, 3)
 
 	requested, err := client.ListRequestedTickets(*user.ID)
 	require.NoError(t, err)
