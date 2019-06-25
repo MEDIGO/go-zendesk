@@ -136,6 +136,38 @@ func (c *client) ListOrganizationTickets(organizationID int64, options *ListOpti
 	}, err
 }
 
+// ListExternalIDTickets list tickets by external ID
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-tickets-by-external-id
+func (c *client) ListExternalIDTickets(externalID string, options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	params.Set("external_id", externalID)
+
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/tickets.json?%s", params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return &ListResponse{
+		Tickets:      out.Tickets,
+		Users:        out.Users,
+		Groups:       out.Groups,
+		NextPage:     out.NextPage,
+		PreviousPage: out.PreviousPage,
+		Count:        out.Count,
+	}, err
+}
+
 // ListRequestedTickets lists tickets that the requesting agent recently viewed in the agent interface,
 // not recently created or updated tickets (unless by the agent recently in the agent interface).
 //
