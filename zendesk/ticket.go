@@ -57,14 +57,14 @@ type CustomField struct {
 }
 
 type Collaborator struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name  *string `json:"name,omitempty"`
+	Email *string `json:"email,omitempty"`
 }
 
 type Requester struct {
-	LocaleID *int   `json:"locale_id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
+	LocaleID *int    `json:"locale_id"`
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
 }
 
 func (c *client) ShowTicket(id int64) (*Ticket, error) {

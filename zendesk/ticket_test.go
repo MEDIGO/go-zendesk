@@ -22,7 +22,7 @@ func TestTicketCRUD(t *testing.T) {
 		Description:   String("The smoke is very colorful."),
 		RequesterID:   user.ID,
 		Tags:          []string{"test"},
-		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: "NAME", Email: "email2@example.com"}},
+		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: String("NAME"), Email: String("email2@example.com")}},
 	}
 
 	created, err := client.CreateTicket(ticket)
@@ -67,8 +67,8 @@ func TestTicketCRUD(t *testing.T) {
 		Subject:       String("My printer is on fire!"),
 		Description:   String("The smoke is very colorful."),
 		Tags:          []string{"test"},
-		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: "NAME", Email: "email2@example.com"}},
-		Requester:     &Requester{Email: "email5@example.com", Name: "NAME2"},
+		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: String("NAME"), Email: String("email2@example.com")}},
+		Requester:     &Requester{Email: String("email5@example.com"), Name: String("NAME2")},
 	}
 
 	createdReq, err := client.CreateTicket(ticketReq)
