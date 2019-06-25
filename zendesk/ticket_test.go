@@ -63,17 +63,24 @@ func TestTicketCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, status.Status)
 
+	externalID := "externalID" + randString(16)
 	ticketReq := &Ticket{
 		Subject:       String("My printer is on fire!"),
 		Description:   String("The smoke is very colorful."),
 		Tags:          []string{"test"},
 		Collaborators: []interface{}{"email@example.com", &Collaborator{Name: String("NAME"), Email: String("email2@example.com")}},
 		Requester:     &Requester{Email: String("email5@example.com"), Name: String("NAME2")},
+		ExternalID:    &externalID,
 	}
 
 	createdReq, err := client.CreateTicket(ticketReq)
 	require.NoError(t, err)
 	require.NotNil(t, createdReq.ID)
+
+	listRes, err := client.ListExternalIDTickets(externalID, nil)
+	require.NoError(t, err)
+	require.Equal(t, int64(1), *listRes.Count)
+	require.Len(t, listRes.Tickets, 1)
 
 	err = client.DeleteTicket(*createdReq.ID)
 	require.NoError(t, err)
