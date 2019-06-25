@@ -1,5 +1,8 @@
 package zendesk
 
+// The via object of a ticket audit or audit event tells you how or why the audit or event was created
+//
+// Zendesk Via API docs: https://developer.zendesk.com/rest_api/docs/support/ticket_audits#the-via-object
 type Via struct {
 	Channel *string `json:"channel,omitempty"`
 	Source  *Source `json:"source,omitempty"`
