@@ -39,6 +39,12 @@ func TestTicketCommentCRUD(t *testing.T) {
 	listed, err = client.ListTicketComments(*ticket.ID)
 	require.NoError(t, err)
 	require.Len(t, listed, 2)
+
+	// assert that we can paginate and include users in listed comments
+	listedFull, err := client.ListTicketCommentsFull(*ticket.ID, &ListOptions{PerPage: 10}, IncludeUsers())
+	require.NoError(t, err)
+	require.Len(t, listedFull.Comments, 2)
+	require.Len(t, listedFull.Users, 2)
 }
 
 func TestTicketCommentRedaction(t *testing.T) {

@@ -43,6 +43,7 @@ type Client interface {
 	ListOrganizationTickets(int64, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTicketComments(int64) ([]TicketComment, error)
+	ListTicketCommentsFull(int64, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
 	ListUsers(*ListUsersOptions) ([]User, error)
@@ -366,6 +367,7 @@ func String(s string) *string {
 
 // ListResponse is a holder for the various returns from the list apis
 type ListResponse struct {
+	Comments     []TicketComment
 	Tickets      []Ticket
 	Users        []User
 	Groups       []Group
