@@ -178,6 +178,33 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	return out.Tickets, err
 }
 
+// ListTicketCollaborators lists collaborators by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-collaborators-for-a-ticket
+func (c *client) ListTicketCollaborators(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/collaborators.json", ticketID), out)
+	return out.Users, err
+}
+
+// ListTicketFollowers lists followers by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-followers-for-a-ticket
+func (c *client) ListTicketFollowers(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/followers.json", ticketID), out)
+	return out.Users, err
+}
+
+// ListTicketEmailCCs lists email CCs by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-email-ccs-for-a-ticket
+func (c *client) ListTicketEmailCCs(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/email_ccs.json", ticketID), out)
+	return out.Users, err
+}
+
 // ListTicketIncidents list all incidents related to the problem
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#listing-ticket-incidents
@@ -186,6 +213,36 @@ func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/incidents.json", problemID), out)
 
 	return out.Tickets, err
+}
+
+// ListTickets lists all tickets
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-tickets
+func (c *client) ListTickets(options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/tickets.json?%s", params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return &ListResponse{
+		Tickets:      out.Tickets,
+		Users:        out.Users,
+		Groups:       out.Groups,
+		NextPage:     out.NextPage,
+		PreviousPage: out.PreviousPage,
+		Count:        out.Count,
+	}, err
 }
 
 // DeleteTickets deletes a Ticket.
