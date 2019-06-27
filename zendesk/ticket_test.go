@@ -49,6 +49,11 @@ func TestTicketCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, emailCCs, 0)
 
+	allTickets, err := client.ListTickets(&ListOptions{SortBy: "updated_at", SortOrder: "desc"}, IncludeUsers())
+	require.NoError(t, err)
+	require.True(t, len(allTickets.Tickets) > 0)
+	require.Equal(t, *created.ID, *allTickets.Tickets[0].ID)
+
 	input := Ticket{
 		Status:                  String("solved"),
 		AdditionalCollaborators: []interface{}{"email3@example.com"},

@@ -215,6 +215,36 @@ func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 	return out.Tickets, err
 }
 
+// ListTickets lists all tickets
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-tickets
+func (c *client) ListTickets(options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/tickets.json?%s", params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return &ListResponse{
+		Tickets:      out.Tickets,
+		Users:        out.Users,
+		Groups:       out.Groups,
+		NextPage:     out.NextPage,
+		PreviousPage: out.PreviousPage,
+		Count:        out.Count,
+	}, err
+}
+
 // DeleteTickets deletes a Ticket.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket
