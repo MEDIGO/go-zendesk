@@ -37,6 +37,18 @@ func TestTicketCRUD(t *testing.T) {
 	require.Equal(t, created.RequesterID, found.RequesterID)
 	require.Equal(t, created.Tags, found.Tags)
 
+	colls, err := client.ListTicketCollaborators(*created.ID)
+	require.NoError(t, err)
+	require.Len(t, colls, 2)
+
+	folls, err := client.ListTicketFollowers(*created.ID)
+	require.NoError(t, err)
+	require.Len(t, folls, 2)
+
+	emailCCs, err := client.ListTicketEmailCCs(*created.ID)
+	require.NoError(t, err)
+	require.Len(t, emailCCs, 0)
+
 	input := Ticket{
 		Status:                  String("solved"),
 		AdditionalCollaborators: []interface{}{"email3@example.com"},

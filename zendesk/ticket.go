@@ -178,6 +178,33 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	return out.Tickets, err
 }
 
+// ListTicketCollaborators lists collaborators by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-collaborators-for-a-ticket
+func (c *client) ListTicketCollaborators(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/collaborators.json", ticketID), out)
+	return out.Users, err
+}
+
+// ListTicketFollowers lists followers by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-followers-for-a-ticket
+func (c *client) ListTicketFollowers(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/followers.json", ticketID), out)
+	return out.Users, err
+}
+
+// ListTicketEmailCCs lists email CCs by ticket id
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-email-ccs-for-a-ticket
+func (c *client) ListTicketEmailCCs(ticketID int64) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d/email_ccs.json", ticketID), out)
+	return out.Users, err
+}
+
 // ListTicketIncidents list all incidents related to the problem
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#listing-ticket-incidents
