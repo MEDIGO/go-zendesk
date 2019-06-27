@@ -31,8 +31,9 @@ func TestTicketCRUD(t *testing.T) {
 	require.Len(t, created.Tags, 1)
 	require.Len(t, created.CollaboratorIDs, 2)
 
-	found, err := client.ShowTicket(*created.ID)
+	foundRes, err := client.ShowTicket(*created.ID, IncludeCommentCount())
 	require.NoError(t, err)
+	found := foundRes.Ticket
 	require.Equal(t, created.Subject, found.Subject)
 	require.Equal(t, created.RequesterID, found.RequesterID)
 	require.Equal(t, created.Tags, found.Tags)
@@ -59,10 +60,10 @@ func TestTicketCRUD(t *testing.T) {
 		AdditionalCollaborators: []interface{}{"email3@example.com"},
 	}
 
-	updated, err := client.UpdateTicket(*created.ID, &input)
+	updated, err := client.UpdateTicket(*created.ID, &input, IncludeUsers(), IncludeCommentCount())
 	require.NoError(t, err)
-	require.Equal(t, input.Status, updated.Status)
-	require.Len(t, updated.CollaboratorIDs, 3)
+	require.Equal(t, input.Status, updated.Ticket.Status)
+	require.Len(t, updated.Ticket.CollaboratorIDs, 3)
 
 	requested, err := client.ListRequestedTickets(*user.ID)
 	require.NoError(t, err)
