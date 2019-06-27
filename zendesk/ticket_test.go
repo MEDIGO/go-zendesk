@@ -37,6 +37,7 @@ func TestTicketCRUD(t *testing.T) {
 	require.Equal(t, created.Subject, found.Subject)
 	require.Equal(t, created.RequesterID, found.RequesterID)
 	require.Equal(t, created.Tags, found.Tags)
+	require.NotNil(t, found.CommentCount)
 
 	colls, err := client.ListTicketCollaborators(*created.ID)
 	require.NoError(t, err)
@@ -64,6 +65,7 @@ func TestTicketCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, input.Status, updated.Ticket.Status)
 	require.Len(t, updated.Ticket.CollaboratorIDs, 3)
+	require.NotNil(t, updated.Users)
 
 	requested, err := client.ListRequestedTickets(*user.ID)
 	require.NoError(t, err)
