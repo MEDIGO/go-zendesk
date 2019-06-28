@@ -44,6 +44,7 @@ type Client interface {
 	ListExternalIDTickets(string, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
 	ListTickets(*ListOptions, ...SideLoad) (*ListResponse, error)
+	ListTicketAudits(int64, *ListOptions) (*ListResponse, error)
 	ListTicketComments(int64) ([]TicketComment, error)
 	ListTicketCommentsFull(int64, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListTicketCollaborators(int64) ([]User, error)
@@ -271,6 +272,7 @@ func unmarshall(res *http.Response, out interface{}) error {
 type APIPayload struct {
 	Attachment                 *Attachment                `json:"attachment"`
 	Attachments                []Attachment               `json:"attachments"`
+	Audits                     []TicketAudit              `json:"audits,omitempty"`
 	Comment                    *TicketComment             `json:"comment,omitempty"`
 	Comments                   []TicketComment            `json:"comments,omitempty"`
 	ComplianceDeletionStatuses []ComplianceDeletionStatus `json:"compliance_deletion_statuses,omitempty"`
@@ -376,6 +378,7 @@ type ListResponse struct {
 	Tickets      []Ticket
 	Users        []User
 	Groups       []Group
+	Audits       []TicketAudit
 	NextPage     *string
 	PreviousPage *string
 	Count        *int64
