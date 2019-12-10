@@ -76,10 +76,6 @@ type Client interface {
 	UploadFile(string, *string, io.Reader) (*Upload, error)
 }
 
-type RequestFunction func(*http.Request) (*http.Response, error)
-
-type MiddlewareFunction func(RequestFunction) RequestFunction
-
 type client struct {
 	username string
 	password string
@@ -87,15 +83,22 @@ type client struct {
 	client    *http.Client
 	baseURL   *url.URL
 	userAgent string
-	reqFunc   RequestFunction
 	headers   map[string]string
+}
+
+type ClientOption func (*client)
+
+func WithHTTPClient(httpClient *http.Client) ClientOption {
+	return func(c *client) {
+		c.client = httpClient
+	}
 }
 
 // NewEnvClient creates a new Client configured via environment variables.
 //
 // Three environment variables are required: ZENDESK_DOMAIN, ZENDESK_USERNAME and ZENDESK_PASSWORD
 // they will provide parameters to the NewClient function
-func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
+func NewEnvClient(opts ...ClientOption) (Client, error) {
 	domain := os.Getenv("ZENDESK_DOMAIN")
 	if domain == "" {
 		return nil, errors.New("ZENDESK_DOMAIN not found")
@@ -111,19 +114,19 @@ func NewEnvClient(middleware ...MiddlewareFunction) (Client, error) {
 		return nil, errors.New("ZENDESK_PASSWORD not found")
 	}
 
-	return NewClient(domain, username, password, middleware...)
+	return NewClient(domain, username, password, opts...)
 }
 
 // NewClient creates a new Client.
 //
 // You can use either a user email/password combination or an API token.
 // For the latter, append /token to the email and use the API token as a password
-func NewClient(domain, username, password string, middleware ...MiddlewareFunction) (Client, error) {
-	return NewURLClient(fmt.Sprintf("https://%s.zendesk.com", domain), username, password, middleware...)
+func NewClient(domain, username, password string, opts ...ClientOption) (Client, error) {
+	return NewURLClient(fmt.Sprintf("https://%s.zendesk.com", domain), username, password, opts...)
 }
 
 // NewURLClient is like NewClient but accepts an explicit end point instead of a Zendesk domain.
-func NewURLClient(endpoint, username, password string, middleware ...MiddlewareFunction) (Client, error) {
+func NewURLClient(endpoint, username, password string, opts ...ClientOption) (Client, error) {
 	baseURL, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, err
@@ -134,14 +137,12 @@ func NewURLClient(endpoint, username, password string, middleware ...MiddlewareF
 		userAgent: "Go-Zendesk",
 		username:  username,
 		password:  password,
-		reqFunc:   http.DefaultClient.Do,
+		client: http.DefaultClient,
 		headers:   make(map[string]string),
 	}
 
-	if middleware != nil {
-		for i := len(middleware) - 1; i >= 0; i-- {
-			c.reqFunc = middleware[i](c.reqFunc)
-		}
+	for _, opt := range opts {
+		opt(c)
 	}
 
 	return c, nil
@@ -185,7 +186,7 @@ func (c *client) request(method, endpoint string, headers map[string]string, bod
 		req.Header.Set(key, value)
 	}
 
-	return c.reqFunc(req)
+	return c.client.Do(req)
 }
 
 func (c *client) do(method, endpoint string, in, out interface{}) error {
