@@ -66,3 +66,12 @@ func (c *client) UpdateIdentity(userID, id int64, identity *UserIdentity) (*User
 func (c *client) DeleteIdentity(userID, id int64) error {
 	return c.delete(fmt.Sprintf("/api/v2/users/%d/identities/%d.json", userID, id), nil)
 }
+
+// MakeIdentityPrimary makes a user identity primary.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/user_identities#make-identity-primary
+func (c *client) MakeIdentityPrimary(userID, id int64) ([]UserIdentity, error) {
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/users/%d/identities/%d/make_primary.json", userID, id), nil, out)
+	return out.Identities, err
+}
