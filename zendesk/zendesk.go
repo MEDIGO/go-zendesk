@@ -30,11 +30,13 @@ type Client interface {
 	CreateOrUpdateUser(*User) (*User, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
+	CreateGroup(*Group) (*Group, error)
 	DeleteIdentity(int64, int64) error
 	DeleteOrganization(int64) error
 	DeleteTicket(int64) error
 	DeleteUser(int64) (*User, error)
 	DeleteOrganizationMembershipByID(int64) error
+	DeleteGroup(int64) error
 	ListIdentities(int64) ([]UserIdentity, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
@@ -53,6 +55,7 @@ type Client interface {
 	ListTicketFields() ([]TicketField, error)
 	ListTicketIncidents(int64) ([]Ticket, error)
 	ListUsers(*ListUsersOptions) ([]User, error)
+	ListGroups() ([]Group, error)
 	MakeIdentityPrimary(int64, int64) ([]UserIdentity, error)
 	PermanentlyDeleteTicket(int64) (*JobStatus, error)
 	PermanentlyDeleteUser(int64) (*User, error)
@@ -75,6 +78,7 @@ type Client interface {
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
 	UpdateUser(int64, *User) (*User, error)
 	UploadFile(string, *string, io.Reader) (*Upload, error)
+	UpdateGroup(int64, *Group) (*Group, error)
 }
 
 type client struct {
@@ -87,7 +91,7 @@ type client struct {
 	headers   map[string]string
 }
 
-type ClientOption func (*client)
+type ClientOption func(*client)
 
 func WithHTTPClient(httpClient *http.Client) ClientOption {
 	return func(c *client) {
@@ -138,7 +142,7 @@ func NewURLClient(endpoint, username, password string, opts ...ClientOption) (Cl
 		userAgent: "Go-Zendesk",
 		username:  username,
 		password:  password,
-		client: http.DefaultClient,
+		client:    http.DefaultClient,
 		headers:   make(map[string]string),
 	}
 
@@ -295,6 +299,7 @@ type APIPayload struct {
 	Upload                     *Upload                    `json:"upload,omitempty"`
 	User                       *User                      `json:"user,omitempty"`
 	Users                      []User                     `json:"users,omitempty"`
+	Group                      *Group                     `json:"group,omitempty"`
 	Groups                     []Group                    `json:"groups,omitempty"`
 	NextPage                   *string                    `json:"next_page,omitempty"`
 	PreviousPage               *string                    `json:"previous_page,omitempty"`
