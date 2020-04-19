@@ -67,6 +67,18 @@ func TestIdentityCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, len(found), 2)
 
+	// make second identity primary
+	found, err = client.MakeIdentityPrimary(*user.ID, *created.ID)
+	require.NoError(t, err)
+	require.Equal(t, len(found), 2)
+
+	// check if the list of identities shows the secondary identity is now primary
+	for _, identity := range found {
+		if *identity.ID == *created.ID {
+			require.True(t, *identity.Primary)
+		}
+	}
+
 	// delete user identity
 	err = client.DeleteIdentity(*user.ID, *created.ID)
 	require.NoError(t, err)
