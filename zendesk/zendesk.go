@@ -69,6 +69,7 @@ type Client interface {
 	ShowJobStatus(string) (*JobStatus, error)
 	ShowLocale(int64) (*Locale, error)
 	ShowLocaleByCode(string) (*Locale, error)
+	ShowManyOrganizations([]int64) ([]Organization, error)
 	ShowManyUsers([]int64) ([]User, error)
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)

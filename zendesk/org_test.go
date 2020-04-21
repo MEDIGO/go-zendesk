@@ -40,6 +40,17 @@ func TestOrganizationCRUD(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, name, *updated.Name)
 
+	input = Organization{
+		Name: String("test-" + randString(7)),
+	}
+	secondary, err := client.CreateOrUpdateOrganization(&input)
+	require.NoError(t, err)
+	require.NotNil(t, *secondary.ID)
+
+	many, err := client.ShowManyOrganizations([]int64{*created.ID, *secondary.ID})
+	require.NoError(t, err)
+	require.Len(t, many, 2)
+
 	err = client.DeleteOrganization(*created.ID)
 	require.NoError(t, err)
 }
