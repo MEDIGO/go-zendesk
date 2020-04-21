@@ -3,6 +3,8 @@ package zendesk
 import (
 	"fmt"
 	"net/url"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/go-querystring/query"
@@ -35,6 +37,20 @@ func (c *client) ShowOrganization(id int64) (*Organization, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/organizations/%d.json", id), out)
 	return out.Organization, err
+}
+
+// ShowManyOrganizations accepts a comma-separated list of organization ids or external ids.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/organizations#show-many-organizations
+func (c *client) ShowManyOrganizations(ids []int64) ([]Organization, error) {
+	var sids []string
+	for _, id := range ids {
+		sids = append(sids, strconv.FormatInt(id, 10))
+	}
+
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/organizations/show_many.json?ids=%s", strings.Join(sids, ",")), out)
+	return out.Organizations, err
 }
 
 // CreateOrganization creates an organization.
