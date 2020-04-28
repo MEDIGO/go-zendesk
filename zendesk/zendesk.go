@@ -71,6 +71,7 @@ type Client interface {
 	ShowLocaleByCode(string) (*Locale, error)
 	ShowManyOrganizations([]int64) ([]Organization, error)
 	ShowManyUsers([]int64) ([]User, error)
+	ShowManyUsersByExternalIDs([]string) ([]User, error)
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)
