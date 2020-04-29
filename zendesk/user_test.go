@@ -58,8 +58,9 @@ func TestUserCRUD(t *testing.T) {
 	require.Equal(t, nilUser, found)
 
 	other, err := client.CreateUser(&User{
-		Name:  String(randString(16)),
-		Email: String(randString(16) + "@example.com"),
+		Name:       String(randString(16)),
+		Email:      String(randString(16) + "@example.com"),
+		ExternalID: String(randString(16)),
 	})
 	require.NoError(t, err)
 
@@ -76,6 +77,10 @@ func TestUserCRUD(t *testing.T) {
 	many, err := client.ShowManyUsers([]int64{*created.ID, *other.ID})
 	require.NoError(t, err)
 	require.Len(t, many, 2)
+
+	manyExternal, err := client.ShowManyUsersByExternalIDs([]string{*created.ExternalID, *other.ExternalID})
+	require.NoError(t, err)
+	require.Len(t, manyExternal, 2)
 
 	tags, err := client.AddUserTags(*created.ID, []string{"a", "b"})
 	require.NoError(t, err)

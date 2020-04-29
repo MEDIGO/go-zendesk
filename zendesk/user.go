@@ -67,7 +67,7 @@ func (c *client) ShowUser(id int64) (*User, error) {
 	return out.User, err
 }
 
-// ShowManyUsers accepts a comma-separated list of user ids or external ids.
+// ShowManyUsers accepts a comma-separated list of user ids.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
 func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
@@ -78,6 +78,14 @@ func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
 
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/users/show_many.json?ids=%s", strings.Join(sids, ",")), out)
+	return out.Users, err
+}
+// ShowManyUsersByExternalIDs accepts a comma-separated list of external ids.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
+func (c *client) ShowManyUsersByExternalIDs(externalIds []string) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/users/show_many.json?external_ids=%s", strings.Join(externalIds, ",")), out)
 	return out.Users, err
 }
 
