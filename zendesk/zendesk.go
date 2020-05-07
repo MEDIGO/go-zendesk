@@ -45,6 +45,7 @@ type Client interface {
 	ListOrganizationTickets(int64, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListExternalIDTickets(string, *ListOptions, ...SideLoad) (*ListResponse, error)
 	ListRequestedTickets(int64) ([]Ticket, error)
+	ListSchedules() ([]Schedule, error)
 	ListTickets(*ListOptions, ...SideLoad) (*ListResponse, error)
 	ListTicketAudits(int64, *ListOptions) (*ListResponse, error)
 	ListTicketComments(int64) ([]TicketComment, error)
@@ -293,6 +294,7 @@ type APIPayload struct {
 	OrganizationMembership     *OrganizationMembership    `json:"organization_membership,omitempty"`
 	OrganizationMemberships    []OrganizationMembership   `json:"organization_memberships,omitempty"`
 	Organizations              []Organization             `json:"organizations,omitempty"`
+	Schedules                  []Schedule                 `json:"schedules,omitempty"`
 	Tags                       []string                   `json:"tags,omitempty"`
 	Ticket                     *Ticket                    `json:"ticket,omitempty"`
 	TicketField                *TicketField               `json:"ticket_field,omitempty"`
