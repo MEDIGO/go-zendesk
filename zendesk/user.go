@@ -58,6 +58,12 @@ type ComplianceDeletionStatus struct {
 	UserID           *int64     `json:"user_id,omitempty"`
 }
 
+func (c *client) IncrementalUsers(startTime time.Time) ([]User, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/incremental/users.json?start_time=%d", startTime.Unix()), out)
+	return out.Users, err
+}
+
 // ShowUser fetches a user by its ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#show-user
@@ -80,6 +86,7 @@ func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
 	err := c.get(fmt.Sprintf("/api/v2/users/show_many.json?ids=%s", strings.Join(sids, ",")), out)
 	return out.Users, err
 }
+
 // ShowManyUsersByExternalIDs accepts a comma-separated list of external ids.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
