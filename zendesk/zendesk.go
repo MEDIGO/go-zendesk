@@ -28,6 +28,7 @@ type Client interface {
 	CreateOrganizationMembership(*OrganizationMembership) (*OrganizationMembership, error)
 	CreateOrUpdateOrganization(*Organization) (*Organization, error)
 	CreateOrUpdateUser(*User) (*User, error)
+	BulkImportTicket(bulk *BulkImportTicket) (*BulkImportTicket, error)
 	CreateTicket(*Ticket) (*Ticket, error)
 	CreateUser(*User) (*User, error)
 	CreateGroup(*Group) (*Group, error)
