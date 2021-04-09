@@ -37,6 +37,15 @@ func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMe
 	return out.OrganizationMemberships, err
 }
 
+// ListOrganizationMembershipsByOrganisationID returns all organization memberships for a specific organisation
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#list-memberships
+func (c *client) ListOrganizationMembershipsByOrganisationID(id int64) ([]OrganizationMembership, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/organizations/%d/organization_memberships.json", id), out)
+	return out.OrganizationMemberships, err
+}
+
 // DeleteOrganizationMembership removes an organization membership
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership
