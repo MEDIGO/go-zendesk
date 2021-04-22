@@ -126,8 +126,12 @@ func (c *client) TicketBulkImport(tickets []ImportTicket) ([]JobStatus, error) {
 	floor := 0
 	var out []JobStatus
 	var errs []error
-	for floor+100 <= len(tickets) {
-		payload := BulkImportTicketPayload{Tickets: tickets[floor : floor+100]}
+	for floor <= len(tickets) {
+		roof := floor + 100
+		if roof > len(tickets) {
+			roof = len(tickets)
+		}
+		payload := BulkImportTicketPayload{Tickets: tickets[floor:roof]}
 		status := new(JobStatus)
 		err := c.post("/api/v2/imports/tickets/create_many.json", &payload, status)
 		if err != nil {
