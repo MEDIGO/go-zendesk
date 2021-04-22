@@ -1,6 +1,7 @@
 package zendesk
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -52,7 +53,7 @@ type Ticket struct {
 	RemoveTags     []string `json:"remove_tags,omitempty"`
 }
 
-type BulkImportTicket struct {
+type ImportTicket struct {
 	AssigneeID          *int64              `json:"assignee_id,omitempty"`
 	Comments            []TicketComment     `json:"comments,omitempty"`
 	CollaboratorIDs     []int               `json:"collaborator_ids,omitempty"`
@@ -106,15 +107,43 @@ type Requester struct {
 	Email    *string `json:"email,omitempty"`
 }
 
-type BulkPayload struct {
-	Ticket *BulkImportTicket `json:"ticket,omitempty"`
+type ImportTicketPayload struct {
+	Ticket *ImportTicket `json:"ticket,omitempty"`
 }
 
-func (c *client) BulkImportTicket(bulk *BulkImportTicket) (*BulkImportTicket, error) {
-	in := &BulkPayload{Ticket: bulk}
-	out := new(BulkPayload)
+func (c *client) ImportTicket(bulk *ImportTicket) (*ImportTicket, error) {
+	in := &ImportTicketPayload{Ticket: bulk}
+	out := new(ImportTicketPayload)
 	err := c.post("/api/v2/imports/tickets.json", in, out)
 	return out.Ticket, err
+}
+
+type BulkImportTicketPayload struct {
+	Tickets []ImportTicket `json:"tickets"`
+}
+
+func (c *client) BulkImportTickets(tickets []ImportTicket) ([]JobStatus, error) {
+	floor := 0
+	var out []JobStatus
+	var errs []error
+	for floor+100 <= len(tickets) {
+		payload := BulkImportTicketPayload{Tickets: tickets[floor : floor+100]}
+		status := new(JobStatus)
+		err := c.post("/api/v2/imports/tickets/create_many.json", &payload, status)
+		if err != nil {
+			errs = append(errs, err)
+		} else {
+			out = append(out, *status)
+		}
+		floor += 100
+	}
+
+	errStrOut := ""
+	for _, err := range errs {
+		errStrOut = fmt.Sprintf("%s | %s", errStrOut, err.Error())
+	}
+
+	return out, errors.New(errStrOut)
 }
 
 func (c *client) ShowTicket(id int64) (*Ticket, error) {

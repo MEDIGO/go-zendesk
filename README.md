@@ -1,11 +1,10 @@
 # Go-Zendesk
 
-[![CircleCI](https://circleci.com/gh/MEDIGO/go-zendesk.svg?style=shield)](https://circleci.com/gh/MEDIGO/go-zendesk)
-[![GoDoc](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk?status.png)](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk)
+[![GoDoc](http://godoc.org/github.com/flume/go-zendesk/zendesk?status.png)](http://godoc.org/github.com/flume/go-zendesk/zendesk)
 
 Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
 
-This library is used internally at MEDIGO and the API resources are being implemented as needed.
+This library is used internally at [~~MEDIGO~~](https://github.com/MEDIGO/go-zendesk) Flume and the API resources are being implemented as needed.
 
 **It's work in progress. Use with caution.**
 
@@ -17,7 +16,7 @@ package main
 import (
   "log"
 
-  "github.com/MEDIGO/go-zendesk/zendesk"
+  "github.com/flume/go-zendesk/zendesk"
 )
 
 func main() {
@@ -33,7 +32,7 @@ func main() {
 }
 ```
 
-Find the complete API on https://godoc.org/github.com/MEDIGO/go-zendesk/zendesk#NewClient
+Find the complete API on https://godoc.org/github.com/flume/go-zendesk/zendesk#NewClient
 
 
 ## Development
@@ -66,5 +65,5 @@ Please note that integration tests will create and alter entities in the configu
 You most likely want to run them against a [Zendesk Sandbox](https://support.zendesk.com/hc/en-us/articles/203661826-Testing-changes-in-your-sandbox-Enterprise-) instance.
 
 ## Copyright and license
-
+Copyright © 2020-2021 Flume Health, Inc. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.
 Copyright © 2017 MEDIGO GmbH. go-zendesk is licensed under the MIT License. See LICENSE for the full license text.

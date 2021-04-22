@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/MEDIGO/go-zendesk/zendesk"
+	"github.com/flume/go-zendesk/zendesk"
 	"github.com/stretchr/testify/require"
 )
 
