@@ -132,12 +132,15 @@ func (c *client) TicketBulkImport(tickets []ImportTicket) ([]JobStatus, error) {
 			roof = len(tickets)
 		}
 		payload := BulkImportTicketPayload{Tickets: tickets[floor:roof]}
-		status := new(JobStatus)
+
+		status := new(struct {
+			JobStatus JobStatus `json:"job_status"`
+		})
 		err := c.post("/api/v2/imports/tickets/create_many.json", &payload, status)
 		if err != nil {
 			errs = append(errs, err)
 		} else {
-			out = append(out, *status)
+			out = append(out, status.JobStatus)
 		}
 		floor += 100
 	}
