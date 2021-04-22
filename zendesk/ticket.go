@@ -111,8 +111,8 @@ type ImportTicketPayload struct {
 	Ticket *ImportTicket `json:"ticket,omitempty"`
 }
 
-func (c *client) ImportTicket(bulk *ImportTicket) (*ImportTicket, error) {
-	in := &ImportTicketPayload{Ticket: bulk}
+func (c *client) TicketImport(ticket *ImportTicket) (*ImportTicket, error) {
+	in := &ImportTicketPayload{Ticket: ticket}
 	out := new(ImportTicketPayload)
 	err := c.post("/api/v2/imports/tickets.json", in, out)
 	return out.Ticket, err
@@ -122,7 +122,7 @@ type BulkImportTicketPayload struct {
 	Tickets []ImportTicket `json:"tickets"`
 }
 
-func (c *client) BulkImportTickets(tickets []ImportTicket) ([]JobStatus, error) {
+func (c *client) TicketBulkImport(tickets []ImportTicket) ([]JobStatus, error) {
 	floor := 0
 	var out []JobStatus
 	var errs []error
@@ -143,7 +143,11 @@ func (c *client) BulkImportTickets(tickets []ImportTicket) ([]JobStatus, error) 
 		errStrOut = fmt.Sprintf("%s | %s", errStrOut, err.Error())
 	}
 
-	return out, errors.New(errStrOut)
+	if errStrOut != "" {
+		return out, errors.New(errStrOut)
+	}
+
+	return out, nil
 }
 
 func (c *client) ShowTicket(id int64) (*Ticket, error) {
