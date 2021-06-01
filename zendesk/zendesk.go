@@ -59,6 +59,7 @@ type Client interface {
 	ListUsers(*ListUsersOptions) ([]User, error)
 	ListGroups() ([]Group, error)
 	MakeIdentityPrimary(int64, int64) ([]UserIdentity, error)
+	MergeEndUsers(int64, *User) (*User, error)
 	PermanentlyDeleteTicket(int64) (*JobStatus, error)
 	PermanentlyDeleteUser(int64) (*User, error)
 	RedactCommentString(int64, int64, string) (*TicketComment, error)
