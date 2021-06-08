@@ -407,31 +407,31 @@ type ListOptions struct {
 	SortOrder string `url:"sort_order,omitempty"`
 }
 
-// Side-Loading
+// SideLoadOptions
 //
 // Zendesk Core API doscs: https://developer.zendesk.com/rest_api/docs/core/side_loading#side-loading
 type SideLoadOptions struct {
 	Include []string
 }
 
-// Allows for side loads to be specified on api requests that support it
+// SideLoad allows for side loads to be specified on API requests that support it.
 type SideLoad func(*SideLoadOptions)
 
-// IncludeUsers will include a top level array of users
+// IncludeUsers will include a top level array of users.
 func IncludeUsers() SideLoad {
 	return func(c *SideLoadOptions) {
 		c.Include = append(c.Include, "users")
 	}
 }
 
-// IncludeGroups will include a top level array of groups
+// IncludeGroups will include a top level array of groups.
 func IncludeGroups() SideLoad {
 	return func(c *SideLoadOptions) {
 		c.Include = append(c.Include, "groups")
 	}
 }
 
-// IncludeCommentCount will include a top level array of groups
+// IncludeCommentCount will include a top level array of groups.
 func IncludeCommentCount() SideLoad {
 	return func(c *SideLoadOptions) {
 		c.Include = append(c.Include, "comment_count")

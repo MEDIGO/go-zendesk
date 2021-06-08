@@ -28,7 +28,7 @@ func (c *client) CreateOrganizationMembership(orgMembership *OrganizationMembers
 	return out.OrganizationMembership, err
 }
 
-// ListOrganizationMembershipsByUserID returns all organization memberships for a specific user
+// ListOrganizationMembershipsByUserID returns all organization memberships for a specific user.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#list-memberships
 func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error) {
@@ -37,7 +37,7 @@ func (c *client) ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMe
 	return out.OrganizationMemberships, err
 }
 
-// DeleteOrganizationMembership removes an organization membership
+// DeleteOrganizationMembershipByID removes an organization membership by its ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership
 func (c *client) DeleteOrganizationMembershipByID(id int64) error {

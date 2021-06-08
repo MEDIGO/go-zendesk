@@ -17,7 +17,7 @@ type TicketField struct {
 	UpdatedAt       *time.Time `json:"updated_at,omitempty"`
 }
 
-// ListTicketFields list all availbale custom ticket fields
+// ListTicketFields list all available custom ticket fields.
 func (c *client) ListTicketFields() ([]TicketField, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/ticket_fields.json"), out)

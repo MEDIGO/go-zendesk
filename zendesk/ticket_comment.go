@@ -59,7 +59,7 @@ func (c *client) ListTicketCommentsFull(id int64, options *ListOptions, sideload
 	}, err
 }
 
-// Redact Comment String removes a string in the comment text
+// RedactCommentString removes a string in the comment text.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/ticket_comments#redact-string-in-comment
 func (c *client) RedactCommentString(id, ticketID int64, text string) (*TicketComment, error) {

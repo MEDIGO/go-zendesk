@@ -2,10 +2,11 @@ package zendesk
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Ticket represents a Zendesk Ticket.
@@ -106,7 +107,7 @@ func (c *client) BulkUpdateManyTickets(ids []int64, ticket *Ticket) error {
 	return err
 }
 
-// ListOrganizationTickets list tickets for an organization
+// ListOrganizationTickets list tickets for an organization.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#list-tickets
 func (c *client) ListOrganizationTickets(organizationID int64, options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
@@ -136,7 +137,7 @@ func (c *client) ListOrganizationTickets(organizationID int64, options *ListOpti
 	}, err
 }
 
-// ListExternalIDTickets list tickets by external ID
+// ListExternalIDTickets list tickets by external ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-tickets-by-external-id
 func (c *client) ListExternalIDTickets(externalID string, options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
@@ -178,7 +179,7 @@ func (c *client) ListRequestedTickets(userID int64) ([]Ticket, error) {
 	return out.Tickets, err
 }
 
-// ListTicketCollaborators lists collaborators by ticket id
+// ListTicketCollaborators lists collaborators by ticket ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-collaborators-for-a-ticket
 func (c *client) ListTicketCollaborators(ticketID int64) ([]User, error) {
@@ -187,7 +188,7 @@ func (c *client) ListTicketCollaborators(ticketID int64) ([]User, error) {
 	return out.Users, err
 }
 
-// ListTicketFollowers lists followers by ticket id
+// ListTicketFollowers lists followers by ticket ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-followers-for-a-ticket
 func (c *client) ListTicketFollowers(ticketID int64) ([]User, error) {
@@ -196,7 +197,7 @@ func (c *client) ListTicketFollowers(ticketID int64) ([]User, error) {
 	return out.Users, err
 }
 
-// ListTicketEmailCCs lists email CCs by ticket id
+// ListTicketEmailCCs lists email CCs by ticket ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-email-ccs-for-a-ticket
 func (c *client) ListTicketEmailCCs(ticketID int64) ([]User, error) {
@@ -205,7 +206,7 @@ func (c *client) ListTicketEmailCCs(ticketID int64) ([]User, error) {
 	return out.Users, err
 }
 
-// ListTicketIncidents list all incidents related to the problem
+// ListTicketIncidents list all incidents related to the problem.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#listing-ticket-incidents
 func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
@@ -215,7 +216,7 @@ func (c *client) ListTicketIncidents(problemID int64) ([]Ticket, error) {
 	return out.Tickets, err
 }
 
-// ListTickets lists all tickets
+// ListTickets lists all tickets.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#list-tickets
 func (c *client) ListTickets(options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
@@ -245,14 +246,14 @@ func (c *client) ListTickets(options *ListOptions, sideloads ...SideLoad) (*List
 	}, err
 }
 
-// DeleteTickets deletes a Ticket.
+// DeleteTicket deletes a Ticket.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket
 func (c *client) DeleteTicket(id int64) error {
 	return c.delete(fmt.Sprintf("/api/v2/tickets/%d.json", id), nil)
 }
 
-// PermanentlyDeleteTicket purges a ticket with all it's associated data - recordings & attachments
+// PermanentlyDeleteTicket purges a ticket with all its associated data - recordings & attachments
 // WARNING: this task is irreversible; GDPR compliant
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-tickets-permanently

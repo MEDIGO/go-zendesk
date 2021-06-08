@@ -45,7 +45,7 @@ type User struct {
 	UserFields          map[string]interface{} `json:"user_fields,omitempty"`
 }
 
-// ComplianceDeletionStatus represents a GDPR status
+// ComplianceDeletionStatus represents a GDPR status.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#show-compliance-deletion-statuses
 type ComplianceDeletionStatus struct {
@@ -67,7 +67,7 @@ func (c *client) ShowUser(id int64) (*User, error) {
 	return out.User, err
 }
 
-// ShowManyUsers accepts a comma-separated list of user ids.
+// ShowManyUsers accepts a comma-separated list of user IDs.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
 func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
@@ -80,7 +80,7 @@ func (c *client) ShowManyUsers(ids []int64) ([]User, error) {
 	err := c.get(fmt.Sprintf("/api/v2/users/show_many.json?ids=%s", strings.Join(sids, ",")), out)
 	return out.Users, err
 }
-// ShowManyUsersByExternalIDs accepts a comma-separated list of external ids.
+// ShowManyUsersByExternalIDs accepts a comma-separated list of external IDs.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#show-many-users
 func (c *client) ShowManyUsersByExternalIDs(externalIds []string) ([]User, error) {
@@ -182,7 +182,7 @@ func (c *client) SearchUsers(query string) ([]User, error) {
 	return out.Users, err
 }
 
-// SearchUsersByExternalID searches users by external_id.
+// SearchUserByExternalID searches for a user by external ID.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/users#search-users
 func (c *client) SearchUserByExternalID(externalID string) (*User, error) {
@@ -204,7 +204,7 @@ func (c *client) AddUserTags(id int64, tags []string) ([]string, error) {
 	return out.Tags, err
 }
 
-// Show Compliance Deletion Statuses
+// ShowComplianceDeletionStatuses
 //
 // Zendesk Core API docs:https://developer.zendesk.com/rest_api/docs/core/users#show-compliance-deletion-statuses
 func (c *client) ShowComplianceDeletionStatuses(id int64) ([]ComplianceDeletionStatus, error) {

@@ -21,7 +21,7 @@ const (
 	StatusClosed  Status = "closed"
 )
 
-// ResultType returns records of the specified resource type
+// ResultType returns records of the specified resource type.
 // Possible values include ticket, user, organization, or group
 type ResultType string
 
@@ -32,7 +32,7 @@ const (
 	ResultTypeGroup        ResultType = "group"
 )
 
-// SearchOperator represents supported search operators for zendesk searches
+// SearchOperator represents supported search operators for Zendesk searches.
 type SearchOperator string
 
 const (
@@ -43,22 +43,22 @@ const (
 	GreaterThanOrEqualTo SearchOperator = ">="
 )
 
-// QueryOptions to narrow search results
+// QueryOptions to narrow search results.
 type QueryOptions struct {
 	Search []string
 }
 
-// SearchString to pass to zendesk
+// Filters to pass to Zendesk
 type Filters func(*QueryOptions)
 
-// StatusFilter filters tickets by their status
+// StatusFilter filters tickets by their status.
 func StatusFilter(s Status, o SearchOperator) Filters {
 	return func(c *QueryOptions) {
 		c.Search = append(c.Search, fmt.Sprintf("status%s%s", o, s))
 	}
 }
 
-// OrganizationFilter filters tickets for the matching organization
+// OrganizationFilter filters tickets for the matching organization.
 func OrganizationFilter(organizationID int) Filters {
 	return func(c *QueryOptions) {
 		c.Search = append(c.Search, fmt.Sprintf("organization_id:%s", strconv.Itoa(organizationID)))

@@ -27,7 +27,7 @@ type Result struct {
 	Title   *string `json:"title,omitempty"`
 }
 
-// Show Job Status shows the status of a background job
+// ShowJobStatus shows the status of a background job.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/job_statuses#show-job-status
 func (c *client) ShowJobStatus(id string) (*JobStatus, error) {
