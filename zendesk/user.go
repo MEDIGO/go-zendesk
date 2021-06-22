@@ -215,3 +215,13 @@ func (c *client) ShowComplianceDeletionStatuses(id int64) ([]ComplianceDeletionS
 		out)
 	return out.ComplianceDeletionStatuses, err
 }
+
+// Merges the end user specified in the path parameter into the existing end user specified in the request body.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/users#merge-end-users
+func (c *client) MergeEndUsers(toMergeUserId int64, intoUser *User) (*User, error) {
+	in := &APIPayload{User: intoUser}
+	out := new(APIPayload)
+	err := c.put(fmt.Sprintf("/api/v2/users/%d/merge.json", toMergeUserId), in, out)
+	return out.User, err
+}
