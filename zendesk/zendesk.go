@@ -63,6 +63,7 @@ type Client interface {
 	SearchOrganizationsByExternalID(string) ([]Organization, error)
 	SearchTickets(string, *ListOptions, ...Filters) (*TicketSearchResults, error)
 	SearchUsers(string) ([]User, error)
+	SearchUsersEx(string, *ListOptions, ...Filters) (*UserSearchResults, error)
 	SearchUserByExternalID(string) (*User, error)
 	ShowComplianceDeletionStatuses(int64) ([]ComplianceDeletionStatus, error)
 	ShowIdentity(int64, int64) (*UserIdentity, error)
@@ -311,6 +312,14 @@ type APIPayload struct {
 // TicketSearchResults represents returned results from the unified search api for type:ticket
 type TicketSearchResults struct {
 	Results      []Ticket `json:"results"`
+	NextPage     *string  `json:"next_page"`
+	PreviousPage *string  `json:"previous_page"`
+	Count        *int64   `json:"count"`
+}
+
+// UserSearchResults represents returned results from the unified search api for type:user
+type UserSearchResults struct {
+	Results      []User `json:"results"`
 	NextPage     *string  `json:"next_page"`
 	PreviousPage *string  `json:"previous_page"`
 	Count        *int64   `json:"count"`
