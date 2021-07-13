@@ -116,7 +116,7 @@ func (c *client) SearchUsersEx(term string, options *ListOptions, filters ...Fil
 	queryString := fmt.Sprintf("type:%s ", ResultTypeUser)
 	queryString += strings.Join(searchOptions.Search, " ")
 	if term != "" {
-		queryString = fmt.Sprintf(`%s %s`, queryString, term)
+		queryString = fmt.Sprintf(`%s /"%s/"`, queryString, term)
 	}
 	params.Set("query", queryString)
 	out := new(UserSearchResults)
