@@ -154,3 +154,23 @@ func TestListUsers(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEqual(t, 0, len(found))
 }
+
+func TestSearchUsersEx(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode.")
+	}
+
+	client, err := NewEnvClient()
+	require.NoError(t, err)
+
+	_, err = client.CreateUser(&User{
+		Name:  String(randString(16)),
+		Email: String(randString(16) + "@example.com"),
+		Tags:  []string{"premium_support"},
+	})
+	require.NoError(t, err)
+
+	found, err := client.SearchUsersEx("tags:premium_support", nil)
+	require.NoError(t, err)
+	require.Equal(t, 1, found.Count)
+}
