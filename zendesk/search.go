@@ -65,6 +65,16 @@ func OrganizationFilter(organizationID int) Filters {
 	}
 }
 
+// GroupNameFilter filters results by their group name
+func GroupNameFilter(name string) Filters {
+	return func(c *QueryOptions) {
+		if strings.Contains(name, " ") {
+			name = fmt.Sprintf("\"%s\"", name)
+		}
+		c.Search = append(c.Search, fmt.Sprintf("group:%s", name))
+	}
+}
+
 // SearchTickets leverages the unified search api to return tickets
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/search
@@ -84,6 +94,32 @@ func (c *client) SearchTickets(term string, options *ListOptions, filters ...Fil
 	}
 	params.Set("query", queryString)
 	out := new(TicketSearchResults)
+	err = c.get(fmt.Sprintf("/api/v2/search.json?%s", params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SearchUsersEx leverages the unified search api to return users
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/search
+func (c *client) SearchUsersEx(term string, options *ListOptions, filters ...Filters) (*UserSearchResults, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	searchOptions := &QueryOptions{}
+	for _, opt := range filters {
+		opt(searchOptions)
+	}
+	queryString := fmt.Sprintf("type:%s ", ResultTypeUser)
+	queryString += strings.Join(searchOptions.Search, " ")
+	if term != "" {
+		queryString = fmt.Sprintf(`%s %s`, queryString, term)
+	}
+	params.Set("query", queryString)
+	out := new(UserSearchResults)
 	err = c.get(fmt.Sprintf("/api/v2/search.json?%s", params.Encode()), out)
 	if err != nil {
 		return nil, err
