@@ -37,6 +37,7 @@ type Client interface {
 	DeleteUser(int64) (*User, error)
 	DeleteOrganizationMembershipByID(int64) error
 	DeleteGroup(int64) error
+	GetAppPublicKey(int64) (string, error)
 	ListIdentities(int64) ([]UserIdentity, error)
 	ListLocales() ([]Locale, error)
 	ListOrganizationMembershipsByUserID(id int64) ([]OrganizationMembership, error)
