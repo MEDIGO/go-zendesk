@@ -32,8 +32,9 @@ func TestTicketCommentCRUD(t *testing.T) {
 		},
 	}
 
-	ticket, err = client.UpdateTicket(*ticket.ID, &in)
+	ticketRes, err := client.UpdateTicket(*ticket.ID, &in)
 	require.NoError(t, err)
+	ticket = ticketRes.Ticket
 
 	// assert that we can list the newly created comment
 	listed, err = client.ListTicketComments(*ticket.ID)
@@ -68,8 +69,9 @@ func TestTicketCommentRedaction(t *testing.T) {
 		},
 	}
 
-	ticket, err = client.UpdateTicket(*ticket.ID, &in)
+	ticketRes, err := client.UpdateTicket(*ticket.ID, &in)
 	require.NoError(t, err)
+	ticket = ticketRes.Ticket
 
 	listed, err := client.ListTicketComments(*ticket.ID)
 	require.NoError(t, err)
