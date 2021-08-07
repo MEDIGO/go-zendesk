@@ -20,6 +20,7 @@ type UserIdentity struct {
 	UpdatedAt          *time.Time `json:"updated_at,omitempty"`
 	UndeliverableCount *int64     `json:"undeliverable_count,omitempty"`
 	DeliverableState   *string    `json:"deliverable_state,omitempty"`
+	SubTypeName        *string    `json:"subtype_name,omitempty"`
 }
 
 // ListIdentities lists all user identities.
