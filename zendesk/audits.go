@@ -48,7 +48,7 @@ type SourceInfo struct {
 	ProfileURL                       *string       `json:"profile_url,omitempty"`
 	RegisteredIntegrationServiceName *string       `json:"registered_integration_service_name,omitempty"`
 	RevisionID                       *int          `json:"revision_id,omitempty"`
-	ServiceInfo                      *string       `json:"service_info,omitempty"`
+	ServiceInfo                      *ServiceInfo  `json:"service_info,omitempty"`
 	Subject                          *string       `json:"subject,omitempty"`
 	SupportsChannelback              *bool         `json:"supports_channelback,omitempty"`
 	SupportsClickthrough             *bool         `json:"supports_clickthrough,omitempty"`
@@ -57,6 +57,14 @@ type SourceInfo struct {
 	TopicID                          *int          `json:"topic_id,omitempty"`
 	TopicName                        *string       `json:"topic_name,omitempty"`
 	Username                         *string       `json:"username,omitempty"`
+}
+
+type ServiceInfo struct {
+	SupportsChannelback                    bool   `json:"supports_channelback"`
+	SupportsClickthrough                   bool   `json:"supports_clickthrough"`
+	RegisteredIntegrationServiceName       string `json:"registered_integration_service_name"`
+	RegisteredIntegrationServiceExternalID string `json:"registered_integration_service_external_id"`
+	IntegrationServiceInstanceName         string `json:"integration_service_instance_name"`
 }
 
 func (c *client) ListTicketAudits(ticketID int64, options *ListOptions) (*ListResponse, error) {
