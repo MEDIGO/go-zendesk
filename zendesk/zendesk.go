@@ -309,6 +309,8 @@ type APIPayload struct {
 	NextPage                   *string                    `json:"next_page,omitempty"`
 	PreviousPage               *string                    `json:"previous_page,omitempty"`
 	Count                      *int64                     `json:"count,omitempty"`
+	EndOfStream	 			   *bool					  `json:"end_of_stream,omitempty"`
+	EndTime		 			   *int64					  `json:"end_of_time,omitempty"`
 }
 
 // TicketSearchResults represents returned results from the unified search api for type:ticket
@@ -394,6 +396,8 @@ type ListResponse struct {
 	NextPage     *string
 	PreviousPage *string
 	Count        *int64
+	EndOfStream	 *bool
+	EndTime		 *int64
 }
 
 // ListOptions specifies the optional parameters for the list methods that support pagination.
@@ -408,6 +412,8 @@ type ListOptions struct {
 	SortBy string `url:"sort_by,omitempty"`
 	// Sets the sort order of the results. One of asc or desc.
 	SortOrder string `url:"sort_order,omitempty"`
+	// Sets the start time of results retrieved
+	StartTime string `url:"start_time,omitempty"`
 }
 
 // Side-Loading

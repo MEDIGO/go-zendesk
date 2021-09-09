@@ -335,6 +335,38 @@ func (c *client) ListTickets(options *ListOptions, sideloads ...SideLoad) (*List
 	}, err
 }
 
+// ListTicketsIncremental lists tickets incrementally
+//
+// Zendesk Core API docs: https://developer.zendesk.com/api-reference/ticketing/ticket-management/incremental_exports/#incremental-ticket-export
+func (c *client) ListTicketsIncremental(options *ListOptions, sideloads ...SideLoad) (*ListResponse, error) {
+	params, err := query.Values(options)
+	if err != nil {
+		return nil, err
+	}
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+	out := new(APIPayload)
+	err = c.get(fmt.Sprintf("/api/v2/incremental/tickets.json?%s", params.Encode()), out)
+	if err != nil {
+		return nil, err
+	}
+	return &ListResponse{
+		Tickets:      out.Tickets,
+		Users:        out.Users,
+		Groups:       out.Groups,
+		NextPage:     out.NextPage,
+		PreviousPage: out.PreviousPage,
+		Count:        out.Count,
+		EndOfStream:  out.EndOfStream,
+		EndTime:	  out.EndTime,
+	}, err
+}
+
 // DeleteTickets deletes a Ticket.
 //
 // Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket
