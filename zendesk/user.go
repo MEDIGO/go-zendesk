@@ -30,6 +30,7 @@ type User struct {
 	LastLoginAt         *time.Time             `json:"last_login_at,omitempty"`
 	Email               *string                `json:"email,omitempty"`
 	Phone               *string                `json:"phone,omitempty"`
+	Photo			    *Attachment            `json:"photo,omitempty"`
 	Signature           *string                `json:"signature,omitempty"`
 	Details             *string                `json:"details,omitempty"`
 	Notes               *string                `json:"notes,omitempty"`
