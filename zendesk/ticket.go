@@ -2,10 +2,11 @@ package zendesk
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Ticket represents a Zendesk Ticket.
@@ -46,6 +47,11 @@ type Ticket struct {
 	BrandID                 *int64         `json:"brand_id,omitempty"`
 	TicketFormID            *int64         `json:"ticket_form_id,omitempty"`
 	FollowupSourceID        *int64         `json:"via_followup_source_id,omitempty"`
+
+	// safe update fields
+	// https://developer.zendesk.com/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions
+	UpdatedStamp *time.Time `json:"updated_stamp,omitempty"`
+	SafeUpdate   *bool      `json:"safe_update,omitempty"`
 
 	AdditionalTags []string `json:"additional_tags,omitempty"`
 	RemoveTags     []string `json:"remove_tags,omitempty"`

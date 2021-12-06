@@ -54,9 +54,12 @@ func TestTicketCRUD(t *testing.T) {
 	require.True(t, len(allTickets.Tickets) > 0)
 	require.Equal(t, *created.ID, *allTickets.Tickets[0].ID)
 
+	safeUpdate := true
 	input := Ticket{
 		Status:                  String("solved"),
 		AdditionalCollaborators: []interface{}{"email3@example.com"},
+		UpdatedStamp:            created.UpdatedAt,
+		SafeUpdate:              &safeUpdate,
 	}
 
 	updated, err := client.UpdateTicket(*created.ID, &input)
