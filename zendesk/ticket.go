@@ -2,10 +2,11 @@ package zendesk
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Ticket represents a Zendesk Ticket.
