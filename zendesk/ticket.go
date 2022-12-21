@@ -2,10 +2,11 @@ package zendesk
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 // Ticket represents a Zendesk Ticket.
@@ -71,6 +72,20 @@ func (c *client) ShowTicket(id int64) (*Ticket, error) {
 	out := new(APIPayload)
 	err := c.get(fmt.Sprintf("/api/v2/tickets/%d.json", id), out)
 	return out.Ticket, err
+}
+
+// ShowManyTickets accepts a comma-separated list of ticket ids or external ids.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/support/tickets#show-multiple-tickets
+func (c *client) ShowManyTickets(ids []int64) ([]Ticket, error) {
+	var sids []string
+	for _, id := range ids {
+		sids = append(sids, strconv.FormatInt(id, 10))
+	}
+
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/tickets/show_many.json?ids=%s", strings.Join(sids, ",")), out)
+	return out.Tickets, err
 }
 
 func (c *client) CreateTicket(ticket *Ticket) (*Ticket, error) {

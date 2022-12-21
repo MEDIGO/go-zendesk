@@ -1,6 +1,6 @@
 module github.com/MEDIGO/go-zendesk
 
-go 1.14
+go 1.18
 
 require (
 	github.com/google/go-querystring v1.0.0
