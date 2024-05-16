@@ -17,6 +17,15 @@ type Group struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
+// ShowGroup fetches a group by its ID.
+//
+// Zendesk Core API docs: https://developer.zendesk.com/rest_api/docs/core/groups#show-group
+func (c *client) ShowGroup(id int64) (*Group, error) {
+	out := new(APIPayload)
+	err := c.get(fmt.Sprintf("/api/v2/groups/%d.json", id), out)
+	return out.Group, err
+}
+
 // CreateGroup creates a group.
 func (c *client) CreateGroup(group *Group) (*Group, error) {
 	in := &APIPayload{Group: group}
