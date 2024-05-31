@@ -22,4 +22,8 @@ jobs:
       run: go build -v ./...
 
     - name: Test
+      env:
+        ZENDESK_DOMAIN: ${{ secrets.ZENDESK_DOMAIN }}
+        ZENDESK_PASSWORD: ${{ secrets.ZENDESK_PASSWORD }}
+        ZENDESK_USERNAME: ${{ secrets.ZENDESK_USERNAME }}
       run: go test -v ./...
