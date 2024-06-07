@@ -66,7 +66,7 @@ func (c *client) RedactCommentString(id, ticketID int64, text string) (*TicketCo
 	in := &RedactedString{Text: &text}
 	out := new(APIPayload)
 	err := c.put(
-		fmt.Sprintf("/api/v2/tickets/%d/comments/%d/redact.json", ticketID, id),
+		fmt.Sprintf("/api/v2/tickets/%d/comments/%d/redact", ticketID, id),
 		in,
 		out)
 

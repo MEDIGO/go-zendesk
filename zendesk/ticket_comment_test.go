@@ -64,7 +64,7 @@ func TestTicketCommentRedaction(t *testing.T) {
 	// create a comment with a sensitive string
 	in := Ticket{
 		Comment: &TicketComment{
-			Body: String("The credit card number is 4111111111111111"),
+			Body: String("The credit card number is 4111111111111111. My SSN number is 000-00-1312"),
 		},
 	}
 
@@ -75,7 +75,11 @@ func TestTicketCommentRedaction(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, listed, 2)
 
-	redactedString := "4111111111111111"
+	// assert that automatic credit card numbers are redacted
+	creditCardNumber := "4111111111111111"
+	require.NotContains(t, *listed[1].Body, creditCardNumber)
+
+	redactedString := "000-00-1312"
 	require.Contains(t, *listed[1].Body, redactedString)
 
 	// assert that we can redact a comment with sensitive information in a ticket
