@@ -31,6 +31,13 @@ func TestGroupCRUD(t *testing.T) {
 	require.NotNil(t, created.CreatedAt)
 	require.NotNil(t, created.UpdatedAt)
 
+	showed, err := client.ShowGroup(*created.ID)
+	require.NoError(t, err)
+	require.NotNil(t, showed.ID)
+	require.NotNil(t, showed.URL)
+	require.NotNil(t, showed.CreatedAt)
+	require.NotNil(t, showed.UpdatedAt)
+
 	afterCreateAllGroups, err := client.ListGroups()
 	require.NoError(t, err)
 	require.True(t, len(afterCreateAllGroups) > len(beforeCreateAllGroups))

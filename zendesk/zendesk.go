@@ -76,6 +76,7 @@ type Client interface {
 	ShowOrganization(int64) (*Organization, error)
 	ShowTicket(int64) (*Ticket, error)
 	ShowUser(int64) (*User, error)
+	ShowGroup(int64) (*Group, error)
 	UpdateIdentity(int64, int64, *UserIdentity) (*UserIdentity, error)
 	UpdateOrganization(int64, *Organization) (*Organization, error)
 	UpdateTicket(int64, *Ticket) (*Ticket, error)
