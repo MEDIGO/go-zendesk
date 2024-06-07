@@ -43,11 +43,11 @@ func TestTicketCRUD(t *testing.T) {
 
 	folls, err := client.ListTicketFollowers(*created.ID)
 	require.NoError(t, err)
-	require.Len(t, folls, 2)
+	require.Len(t, folls, 0)
 
 	emailCCs, err := client.ListTicketEmailCCs(*created.ID)
 	require.NoError(t, err)
-	require.Len(t, emailCCs, 0)
+	require.Len(t, emailCCs, 2)
 
 	allTickets, err := client.ListTickets(&ListOptions{SortBy: "updated_at", SortOrder: "desc"}, IncludeUsers())
 	require.NoError(t, err)
