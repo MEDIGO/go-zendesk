@@ -1,6 +1,5 @@
 # Go-Zendesk
 
-[![CircleCI](https://circleci.com/gh/MEDIGO/go-zendesk.svg?style=shield)](https://circleci.com/gh/MEDIGO/go-zendesk)
 [![GoDoc](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk?status.png)](http://godoc.org/github.com/MEDIGO/go-zendesk/zendesk)
 
 Go-Zendesk is a [Zendesk Core API](https://developer.zendesk.com/rest_api/docs/core/introduction) client library for Go.
