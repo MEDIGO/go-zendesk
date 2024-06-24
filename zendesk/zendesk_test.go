@@ -40,9 +40,9 @@ func Example() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	ticket, err := client.ShowTicket(1)
+	ticketRes, err := client.ShowTicket(1)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Requester ID is: %d", *ticket.RequesterID)
+	log.Printf("Requester ID is: %d", *ticketRes.Ticket.RequesterID)
 }
