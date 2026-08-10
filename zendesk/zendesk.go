@@ -74,12 +74,12 @@ type Client interface {
 	ShowManyUsers([]int64) ([]User, error)
 	ShowManyUsersByExternalIDs([]string) ([]User, error)
 	ShowOrganization(int64) (*Organization, error)
-	ShowTicket(int64) (*Ticket, error)
+	ShowTicket(int64, ...SideLoad) (*TicketResponse, error)
 	ShowUser(int64) (*User, error)
 	ShowGroup(int64) (*Group, error)
 	UpdateIdentity(int64, int64, *UserIdentity) (*UserIdentity, error)
 	UpdateOrganization(int64, *Organization) (*Organization, error)
-	UpdateTicket(int64, *Ticket) (*Ticket, error)
+	UpdateTicket(int64, *Ticket, ...SideLoad) (*TicketResponse, error)
 	UpdateUser(int64, *User) (*User, error)
 	UploadFile(string, *string, io.Reader) (*Upload, error)
 	UpdateGroup(int64, *Group) (*Group, error)
@@ -389,6 +389,14 @@ func Int(i int64) *int64 {
 func String(s string) *string {
 	p := s
 	return &p
+}
+
+// TicketResponse is a holder for the various returns from the ticket apis
+type TicketResponse struct {
+	Ticket        *Ticket
+	Users         []User
+	Groups        []Group
+	Organizations []Organization
 }
 
 // ListResponse is a holder for the various returns from the list apis

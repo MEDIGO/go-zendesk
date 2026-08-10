@@ -3,6 +3,7 @@ package zendesk
 import (
 	"fmt"
 	"github.com/google/go-querystring/query"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -67,10 +68,23 @@ type Requester struct {
 	Email    *string `json:"email,omitempty"`
 }
 
-func (c *client) ShowTicket(id int64) (*Ticket, error) {
+func (c *client) ShowTicket(id int64, sideloads ...SideLoad) (*TicketResponse, error) {
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	params := url.Values{}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
 	out := new(APIPayload)
-	err := c.get(fmt.Sprintf("/api/v2/tickets/%d.json", id), out)
-	return out.Ticket, err
+	err := c.get(fmt.Sprintf("/api/v2/tickets/%d.json?%s", id, params.Encode()), out)
+	return &TicketResponse{
+		Ticket:        out.Ticket,
+		Users:         out.Users,
+		Groups:        out.Groups,
+		Organizations: out.Organizations,
+	}, err
 }
 
 func (c *client) CreateTicket(ticket *Ticket) (*Ticket, error) {
@@ -80,11 +94,25 @@ func (c *client) CreateTicket(ticket *Ticket) (*Ticket, error) {
 	return out.Ticket, err
 }
 
-func (c *client) UpdateTicket(id int64, ticket *Ticket) (*Ticket, error) {
+func (c *client) UpdateTicket(id int64, ticket *Ticket, sideloads ...SideLoad) (*TicketResponse, error) {
+	sideLoads := &SideLoadOptions{}
+	for _, opt := range sideloads {
+		opt(sideLoads)
+	}
+	params := url.Values{}
+	if len(sideLoads.Include) > 0 {
+		params.Set("include", strings.Join(sideLoads.Include, ","))
+	}
+
 	in := &APIPayload{Ticket: ticket}
 	out := new(APIPayload)
-	err := c.put(fmt.Sprintf("/api/v2/tickets/%d.json", id), in, out)
-	return out.Ticket, err
+	err := c.put(fmt.Sprintf("/api/v2/tickets/%d.json?%s", id, params.Encode()), in, out)
+	return &TicketResponse{
+		Ticket:        out.Ticket,
+		Users:         out.Users,
+		Groups:        out.Groups,
+		Organizations: out.Organizations,
+	}, err
 }
 
 func (c *client) BatchUpdateManyTickets(tickets []Ticket) error {
